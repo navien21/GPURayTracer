@@ -1,7 +1,7 @@
 #ifndef GRT_GPUMANAGER_HPP
 #define GRT_GPUMANAGER_HPP
 
-namespace gtr {
+namespace grt {
 
     // Forward declarations
     class Scene;
@@ -15,7 +15,7 @@ namespace gtr {
             void download(Image &);
     };
 
-}; // gtr namespace
+}; // grt namespace
 
 #endif//GRT_GPUMANAGER_HPP
 

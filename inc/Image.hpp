@@ -1,7 +1,7 @@
 #ifndef GRT_IMAGE_HPP
 #define GRT_IMAGE_HPP
 
-namespace gtr {
+namespace grt {
 
     class Image
     {
@@ -10,6 +10,6 @@ namespace gtr {
 
     };
 
-}; // gtr namespace
+}; // grt namespace
 
-#endif//GTR_IMAGE_HPP
+#endif//GRT_IMAGE_HPP

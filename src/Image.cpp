@@ -3,10 +3,10 @@
 
 #include <Image.hpp>
 
-namespace gtr {
+namespace grt {
 
 void Image::save() {}
 
-}; // gtr namespace
+}; // grt namespace
 
 #endif//GRT_IMAGE_CPP

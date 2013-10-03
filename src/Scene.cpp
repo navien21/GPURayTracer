@@ -3,9 +3,13 @@
 
 #include <Scene.hpp>
 
-namespace gtr {
+namespace grt {
 
-}; // gtr namespace
+std::string Scene::getName() const {
+    return this->name;
+}
+
+}; // grt namespace
 
 #endif//GRT_SCENE_CPP
 

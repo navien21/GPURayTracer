@@ -3,13 +3,13 @@
 
 #include <GPUManager.hpp>
 
-namespace gtr {
+namespace grt {
 
 void GPUManager::upload(const Scene &) {}
 void GPUManager::render() {}
 void GPUManager::download(Image &) {}
 
-}; // gtr namespace
+}; // grt namespace
 
 #endif//GRT_GPUMANAGER_CPP
 

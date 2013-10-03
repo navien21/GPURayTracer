@@ -14,10 +14,10 @@ int main(int argc, char ** argv)
     parseArgs(argc,argv);
 
     // Initialize GPU
-    gtr::GPUManager gman;
+    grt::GPUManager gman;
 
     // Construct Scene
-    gtr::Scene scene;
+    grt::Scene scene("Scene0");
 
     // Offload to GPU
     gman.upload(scene);
@@ -26,7 +26,7 @@ int main(int argc, char ** argv)
     gman.render();
 
     // Obtain image result from GPU
-    gtr::Image img;
+    grt::Image img;
     gman.download(img);
 
     // Output image
