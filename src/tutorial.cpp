@@ -58,6 +58,31 @@ static float rand_range(float min, float max)
 }
 
 
+// added by Dylan (begin)
+BasicLight generateLight(float pos[3],float color[3]){
+    BasicLight light;
+    light.casts_shadow=1;
+    light.padding=0;
+    light.color = make_float3(color[0],color[1],color[2]);
+    light.pos = make_float3(pos[0],pos[1],pos[2]);
+    return light;
+}
+
+void normalizeLight(BasicLight lights[], int n, float brightness=1){
+    float norm;
+    float btotal=0;
+    for (int i=0; i!=n; i++){
+        btotal += lights[i].color.x+ lights[i].color.y + lights[i].color.z;
+    }
+    norm = (3*brightness)/btotal;
+    for(int i=0;i!=n;i++){
+        lights[i].color.x = lights[i].color.x*norm;
+        lights[i].color.y = lights[i].color.y*norm;
+        lights[i].color.z = lights[i].color.z*norm;
+    }
+}
+// added by Dylan (end)
+
 //-----------------------------------------------------------------------------
 // 
 // Whitted Scene
@@ -138,9 +163,30 @@ void Tutorial::initScene( InitialCameraData& camera_data )
   m_context["bg_color"]->setFloat( make_float3( 0.34f, 0.55f, 0.85f ) );
 
   // Lights
-  BasicLight lights[] = { 
-    { make_float3( -5.0f, 60.0f, -16.0f ), make_float3( 1.0f, 1.0f, 1.0f ), 1 }
-  };
+  // Lights
+  //BasicLight lights[1] = { 
+  //  { make_float3( -25.0f, 60.0f, -16.0f ), make_float3( 1.0f, 1.0f, 1.0f ), 1 }
+  //};
+  const int n=2; //number of light sources... comes from JSON
+  int brightness = 1; // brightness... default is 1, but should be modifiable in JSON
+
+  // temporary float arrays... these should be their own struct or class so they can be
+  // looped through to generate light sources.. or just directly parsed into BasicLight form
+  float light1pos[3] = {-25.0,60.0,-16.0};
+  float light1color[3] = {1,1,1};
+
+  float light2pos[3] = {-20.0,60.0, 16.0};
+  float light2color[3] = {1,1,1};
+
+  BasicLight lights[n];
+  //lights = new BasicLight[n];
+  lights[0] = generateLight(light1pos,light1color);
+  lights[1] = generateLight(light2pos,light2color);
+
+  normalizeLight(lights, n, brightness); // corrects for brightness
+
+  //lights[0].pos = make_float3( -25.0f, 60.0f, -16.0f );
+  //lights[0].color = make_float3( 0.4f, 0.7f, 0.4f );
 
   Buffer light_buffer = m_context->createBuffer(RT_BUFFER_INPUT);
   light_buffer->setFormat(RT_FORMAT_USER);
