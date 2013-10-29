@@ -19,7 +19,7 @@
  * SUCH DAMAGES
  */
 
-#include "tutorial.h"
+#include "../inc/tutorial.h"
 
 rtDeclareVariable(float3, geometric_normal, attribute geometric_normal, ); 
 rtDeclareVariable(float3, shading_normal,   attribute shading_normal, ); 

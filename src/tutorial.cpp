@@ -44,7 +44,7 @@
 #include <iostream>
 #include <GLUTDisplay.h>
 #include <ImageLoader.h>
-#include "commonStructs.h"
+#include "../inc/commonStructs.h"
 #include <cstdlib>
 #include <cstring>
 #include <sstream>
@@ -120,7 +120,7 @@ void Tutorial::initScene( InitialCameraData& camera_data )
   // set up path to ptx file associated with tutorial number
   std::stringstream ss;
   ss << "tutorial" << m_tutnum << ".cu";
-  m_ptx_path = ptxpath( "tutorial", ss.str() );
+  m_ptx_path = ptxpath( "gpuRayTracer", ss.str() );
 
   // context 
   m_context->setRayTypeCount( 2 );
@@ -290,7 +290,7 @@ float4 make_plane( float3 n, float3 p )
 
 void Tutorial::createGeometry()
 {
-  std::string box_ptx( ptxpath( "tutorial", "box.cu" ) ); 
+  std::string box_ptx( ptxpath( "gpuRayTracer", "box.cu" ) ); 
   Program box_bounds = m_context->createProgramFromPTXFile( box_ptx, "box_bounds" );
   Program box_intersect = m_context->createProgramFromPTXFile( box_ptx, "box_intersect" );
 
@@ -335,7 +335,7 @@ void Tutorial::createGeometry()
   }
 
   // Floor geometry
-  std::string pgram_ptx( ptxpath( "tutorial", "parallelogram.cu" ) );
+  std::string pgram_ptx( ptxpath( "gpuRayTracer", "parallelogram.cu" ) );
   Geometry parallelogram = m_context->createGeometry();
   parallelogram->setPrimitiveCount( 1u );
   parallelogram->setBoundingBoxProgram( m_context->createProgramFromPTXFile( pgram_ptx, "bounds" ) );
@@ -495,7 +495,7 @@ int main( int argc, char** argv )
   unsigned int width = 1080u, height = 720u;
 
   std::string texture_path;
-  int tutnum = 10;
+  int tutnum = 3;
   for ( int i = 1; i < argc; ++i ) {
     std::string arg( argv[i] );
     if ( arg == "--help" || arg == "-h" ) {
