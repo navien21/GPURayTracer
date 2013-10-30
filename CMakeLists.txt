@@ -210,6 +210,9 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/lib/sampleConfig.h.in ${CMAKE_CURRENT
 
 # Path to sutil.h that all the samples need
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/lib/sutil
+                     ${CMAKE_CURRENT_SOURCE_DIR}/src/
+                     ${CMAKE_CURRENT_SOURCE_DIR}/inc/
+                     ${CMAKE_CURRENT_SOURCE_DIR}/CUDA/
                      ${OptiX_INCLUDE}/optixu
                      ${CMAKE_CURRENT_BINARY_DIR}
                      ${CUDA_INCLUDE_DIRS} )
@@ -273,6 +276,10 @@ endfunction()
     CUDA/box.cu
     inc/commonStructs.h
     CUDA/parallelogram.cu
+
+    #New files for JSON reader
+    src/jsonParameterReader.cpp
+    inc/RayTraceIMageData.h
     )
 
 

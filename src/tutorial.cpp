@@ -44,7 +44,7 @@
 #include <iostream>
 #include <GLUTDisplay.h>
 #include <ImageLoader.h>
-#include "../inc/commonStructs.h"
+#include "commonStructs.h"
 #include <cstdlib>
 #include <cstring>
 #include <sstream>
