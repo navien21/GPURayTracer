@@ -49,6 +49,8 @@
 #include <cstring>
 #include <sstream>
 #include <math.h>
+#include "RayTraceImageData.h"
+#include "jsonParameterReader.h"
 
 using namespace optix;
 
@@ -496,6 +498,8 @@ int main( int argc, char** argv )
 
   std::string texture_path;
   int tutnum = 3;
+  //RayTraceImageData image;
+  //LoadRayTraceImageFromJsonFile("C:/Users/FormerTwigman/gpuProj/GPURayTracer_2/params/test.json",image);
   for ( int i = 1; i < argc; ++i ) {
     std::string arg( argv[i] );
     if ( arg == "--help" || arg == "-h" ) {

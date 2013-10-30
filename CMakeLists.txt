@@ -210,9 +210,8 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/lib/sampleConfig.h.in ${CMAKE_CURRENT
 
 # Path to sutil.h that all the samples need
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/lib/sutil
-                     ${CMAKE_CURRENT_SOURCE_DIR}/src/
                      ${CMAKE_CURRENT_SOURCE_DIR}/inc/
-                     ${CMAKE_CURRENT_SOURCE_DIR}/CUDA/
+                     ${CMAKE_CURRENT_SOURCE_DIR}/../boost_1_54_0/
                      ${OptiX_INCLUDE}/optixu
                      ${CMAKE_CURRENT_BINARY_DIR}
                      ${CUDA_INCLUDE_DIRS} )
@@ -268,19 +267,23 @@ endfunction()
 
   # See top level CMakeLists.txt file for documentation of OPTIX_add_sample_executable.
   OPTIX_add_sample_executable( gpuRayTracer
+
     src/tutorial.cpp
     inc/tutorial.h
     CUDA/tutorial3.cu
+
 
     # These files are common among multiple samples
     CUDA/box.cu
     inc/commonStructs.h
     CUDA/parallelogram.cu
 
-    #New files for JSON reader
+    inc/RayTraceImageData.h
+    inc/jsonParameterReader.h
     src/jsonParameterReader.cpp
-    inc/RayTraceIMageData.h
+
     )
+
 
 
 # Our sutil library.  The rules to build it are found in the subdirectory.
