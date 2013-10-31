@@ -94,8 +94,8 @@ void normalizeLight(BasicLight lights[], int n, float brightness=1){
 class Tutorial : public SampleScene
 {
 public:
-  Tutorial(int tutnum, const std::string& texture_path)
-    : SampleScene(), m_tutnum(tutnum), m_width(1080u), m_height(720u), texture_path( texture_path )
+  Tutorial(int tutnum, const std::string& texture_path, const std::string& json_file)
+    : SampleScene(), m_tutnum(tutnum), m_width(1080u), m_height(720u), texture_path( texture_path ), json_file( json_file )
   {}
   
   // From SampleScene
@@ -114,6 +114,7 @@ private:
   unsigned int m_height;
   std::string   texture_path;
   std::string  m_ptx_path;
+  std::string json_file;
 };
 
 
@@ -161,16 +162,46 @@ void Tutorial::initScene( InitialCameraData& camera_data )
     miss_name = "miss";
   m_context->setMissProgram( 0, m_context->createProgramFromPTXFile( m_ptx_path, miss_name ) );
   const float3 default_color = make_float3(1.0f, 1.0f, 1.0f);
-  m_context["envmap"]->setTextureSampler( loadTexture( m_context, texpath("CedarCity.hdr"), default_color) );
+  //m_context["envmap"]->setTextureSampler( loadTexture( m_context, texpath("CedarCity.hdr"), default_color) );
   m_context["bg_color"]->setFloat( make_float3( 0.34f, 0.55f, 0.85f ) );
-
+  
   // Lights
   // Lights
   //BasicLight lights[1] = { 
   //  { make_float3( -25.0f, 60.0f, -16.0f ), make_float3( 1.0f, 1.0f, 1.0f ), 1 }
   //};
-  const int n=2; //number of light sources... comes from JSON
+
+  RayTraceImageData imageData;
+  if(json_file != "") {
+	LoadRayTraceImageFromJsonFile(json_file,imageData);
+  } else {
+	  imageData.useDefaultLighting = true;
+  }
+  std::vector<BasicLight> lights;
   int brightness = 1; // brightness... default is 1, but should be modifiable in JSON
+  int n;
+
+  if(!imageData.useDefaultLighting) {
+	  std::vector<Light> json_lights = imageData.lighting.lights;
+	  n=json_lights.size(); //number of light sources... comes from JSON
+      int brightness = 1; // TODO figure out how to mesh this with the color brightness provided in json
+
+  // temporary float arrays... these should be their own struct or class so they can be
+  // looped through to generate light sources.. or just directly parsed into BasicLight form
+	  lights.resize(n);
+  for(int i = 0; i < n; i++) {
+	  Light currentLight = json_lights[i];
+	  float lightposition[3] = {currentLight.position.x, currentLight.position.y, currentLight.position.z};
+	  float lightcolor[3] = {currentLight.color.r, currentLight.color.g, currentLight.color.b};
+	  lights[i] = generateLight(lightposition, lightcolor);
+
+  }
+
+  } else {
+
+	  n=2; //number of light sources... comes from JSON
+	  lights.resize(n);
+  
 
   // temporary float arrays... these should be their own struct or class so they can be
   // looped through to generate light sources.. or just directly parsed into BasicLight form
@@ -180,25 +211,31 @@ void Tutorial::initScene( InitialCameraData& camera_data )
   float light2pos[3] = {-20.0,60.0, 16.0};
   float light2color[3] = {1,1,1};
 
-  BasicLight lights[n];
+
+  //BasicLight lights[2];
+  
+  
   //lights = new BasicLight[n];
   lights[0] = generateLight(light1pos,light1color);
   lights[1] = generateLight(light2pos,light2color);
+  }
 
-  normalizeLight(lights, n, brightness); // corrects for brightness
-
+  normalizeLight(lights.data(), n, brightness); // corrects for brightness
+  
   //lights[0].pos = make_float3( -25.0f, 60.0f, -16.0f );
   //lights[0].color = make_float3( 0.4f, 0.7f, 0.4f );
 
+  
+  
   Buffer light_buffer = m_context->createBuffer(RT_BUFFER_INPUT);
   light_buffer->setFormat(RT_FORMAT_USER);
   light_buffer->setElementSize(sizeof(BasicLight));
-  light_buffer->setSize( sizeof(lights)/sizeof(lights[0]) );
-  memcpy(light_buffer->map(), lights, sizeof(lights));
-  light_buffer->unmap();
-
+  light_buffer->setSize(lights.size());
+  memcpy(light_buffer->map(), lights.data(), sizeof(lights[0])*lights.size());
+  light_buffer->unmap(); 
+    
   m_context["lights"]->set(light_buffer);
-
+  
   // Set up camera
   camera_data = InitialCameraData( make_float3( 7.0f, 9.2f, -6.0f ), // eye
                                    make_float3( 0.0f, 4.0f,  0.0f ), // lookat
@@ -500,47 +537,29 @@ int main( int argc, char** argv )
   int tutnum = 3;
   //RayTraceImageData image;
   //LoadRayTraceImageFromJsonFile("C:/Users/FormerTwigman/gpuProj/GPURayTracer_2/params/test.json",image);
-  for ( int i = 1; i < argc; ++i ) {
-    std::string arg( argv[i] );
-    if ( arg == "--help" || arg == "-h" ) {
-      printUsageAndExit( argv[0] );
-    } else if ( arg.substr( 0, 6 ) == "--dim=" ) {
-      std::string dims_arg = arg.substr(6);
-      if ( sutilParseImageDimensions( dims_arg.c_str(), &width, &height ) != RT_SUCCESS ) {
-        std::cerr << "Invalid window dimensions: '" << dims_arg << "'" << std::endl;
-        printUsageAndExit( argv[0] );
-      }
-    } else if ( arg == "-t" || arg == "--texture-path" ) {
-      if ( i == argc-1 ) {
-        printUsageAndExit( argv[0] );
-      }
-      texture_path = argv[++i];
-    } else if ( arg == "-T" || arg == "--tutorial-number" ) {
-      if ( i == argc-1 ) {
-        printUsageAndExit( argv[0] );
-      }
-      tutnum = atoi(argv[++i]);
-    } else {
-      std::cerr << "Unknown option: '" << arg << "'\n";
-      printUsageAndExit( argv[0] );
-    }
+  std::string json_file;
+  if(argc > 1) {
+    std::string arg( argv[1] );
+	json_file = arg;
+  } else {
+	  json_file="";
   }
 
   if( !GLUTDisplay::isBenchmark() ) printUsageAndExit( argv[0], false );
 
-  if (tutnum < 0 || tutnum > 11) {
+  /*(if (tutnum < 0 || tutnum > 11) {
     std::cerr << "Tutorial number ("<<tutnum<<") is out of range [0..11]\n";
     exit(1);
   }
 
   if( texture_path.empty() ) {
     texture_path = std::string( sutilSamplesDir() ) + "/tutorial/data";
-  }
+  }*/
 
   std::stringstream title;
   title << "Tutorial " << tutnum;
   try {
-    Tutorial scene(tutnum, texture_path);
+    Tutorial scene(tutnum, texture_path, json_file);
     scene.setDimensions( width, height );
     GLUTDisplay::run( title.str(), &scene );
   } catch( Exception& e ){
