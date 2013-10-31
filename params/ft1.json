@@ -2,7 +2,7 @@
   "image":
   {
      "useDefaultLights": false,
-     "totalLightAmount": { "r": 20, "g": 30, "b":50 },
+     "totalLightAmount": { "r": 255, "g": 255, "b":255 },
      "lights":
      [
 
