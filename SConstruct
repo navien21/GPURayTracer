@@ -12,6 +12,7 @@ src/GPUManager.cpp
 grt_lib = grt_env.StaticLibrary('GRT', grt_src)
 
 grt_env.Append(LIBS = [grt_lib])
+grt_env.Append(LIBS = ['boost_program_options'])
 
 grt_env.Program('grt', 'src/main.cpp')
 
