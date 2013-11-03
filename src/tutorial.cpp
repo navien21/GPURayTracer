@@ -184,7 +184,7 @@ void Tutorial::initScene( InitialCameraData& camera_data )
   if(!imageData.useDefaultLighting) {
 	  std::vector<Light> json_lights = imageData.lighting.lights;
 	  n=json_lights.size(); //number of light sources... comes from JSON
-      int brightness = 1; // TODO figure out how to mesh this with the color brightness provided in json
+      brightness = imageData.lighting.totalBrightness; // TODO figure out how to mesh this with the color brightness provided in json
 
   // temporary float arrays... these should be their own struct or class so they can be
   // looped through to generate light sources.. or just directly parsed into BasicLight form

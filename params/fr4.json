@@ -2,7 +2,7 @@
   "image":
   {
      "useDefaultLights": false,
-     "totalLightAmount": { "r": 255, "g": 255, "b":255 },
+     "totalBrighness": 1.0,
      "lights":
      [
        { "xPos": -50.0, "yPos": 38.0, "zPos": -10.0, 

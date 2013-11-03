@@ -47,12 +47,11 @@ public:
 class Lighting
 {
 public:
-    Color totalLightAmount;  
+    float totalBrightness;  
     std::vector< Light > lights;
 	void print()
 	{
-		std::cout<<"totalLightAmount: ";
-		totalLightAmount.print();
+		std::cout<<"totalBrightness: "<<totalBrightness<<std::endl;
 		int nLights = lights.size();
 		for (int i=0; i<nLights; ++i)
 		{

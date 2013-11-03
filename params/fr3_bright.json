@@ -2,14 +2,15 @@
   "image":
   {
      "useDefaultLights": false,
+     "totalBrightness": 2,
      "lights":
      [
 
        { "xPos": -25.0, "yPos": 60.0, "zPos": -16.0, 
-         "r": 0.3, "g": 0.3, "b": 1.0},
+         "r": 0.0, "g": 0.0, "b": 1.0},
 
        { "xPos":-20.0, "yPos": 60.0, "zPos": 16.0,
-         "r": 1.0, "g": 0.3, "b": 0.3}
+         "r": 1.0, "g": 0.0, "b": 0.0}
      ]
   }
 }

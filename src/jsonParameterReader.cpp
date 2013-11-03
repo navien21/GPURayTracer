@@ -6,7 +6,7 @@
   "image":
   {
      "useDefaultLights": false,
-     "totalLightAmount": { "r": 20, "g": 30, "b": 50 },
+     "totalBrightness": 1,
      "lights":
      [
 
@@ -78,10 +78,8 @@ void LoadRayTraceImageFromJsonFile(std::string fileName, RayTraceImageData &imag
 	  std::cout<<"image.useDefaultLighting false.  "
 		  <<"Will try to load light information from json file"<<std::endl;
 
-	  // defaults set to 100 for now.  This is arbitrary
-	  image.lighting.totalLightAmount.r = pt.get("image.totalLightAmount.r",100.);
-	  image.lighting.totalLightAmount.g = pt.get("image.totalLightAmount.g", 100.);
-	  image.lighting.totalLightAmount.b = pt.get("image.totalLightAmount.b", 100.);
+	  // default to 1 
+	  image.lighting.totalBrightness = pt.get("image.totalBrightness",1.);
 
 	  // Now try to read in the lights
 	  BOOST_FOREACH( ptree::value_type &v, pt.get_child("image.lights") )
