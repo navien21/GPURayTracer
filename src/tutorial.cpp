@@ -44,13 +44,15 @@
 #include <iostream>
 #include <GLUTDisplay.h>
 #include <ImageLoader.h>
-#include "commonStructs.h"
+//#include "commonStructs.h"
+#include "GPUManager.hpp"
 #include <cstdlib>
 #include <cstring>
 #include <sstream>
 #include <math.h>
 #include "RayTraceImageData.h"
 #include "jsonParameterReader.h"
+
 
 using namespace optix;
 
@@ -341,38 +343,6 @@ void Tutorial::createGeometry()
   box["boxmin"]->setFloat( -2.0f, 0.0f, -2.0f );
   box["boxmax"]->setFloat(  2.0f, 7.0f,  2.0f );
 
-  // Create chull
-  Geometry chull = 0;
-  if(m_tutnum >= 9){
-    chull = m_context->createGeometry();
-    chull->setPrimitiveCount( 1u );
-    chull->setBoundingBoxProgram( m_context->createProgramFromPTXFile( m_ptx_path, "chull_bounds" ) );
-    chull->setIntersectionProgram( m_context->createProgramFromPTXFile( m_ptx_path, "chull_intersect" ) );
-    Buffer plane_buffer = m_context->createBuffer(RT_BUFFER_INPUT);
-    plane_buffer->setFormat(RT_FORMAT_FLOAT4);
-    int nsides = 6;
-    plane_buffer->setSize( nsides + 2 );
-    float4* chplane = (float4*)plane_buffer->map();
-    float radius = 1;
-    float3 xlate = make_float3(-1.4f, 0, -3.7f);
-
-    for(int i = 0; i < nsides; i++){
-      float angle = float(i)/float(nsides) * M_PIf * 2.0f;
-      float x = cos(angle);
-      float y = sin(angle);
-      chplane[i] = make_plane( make_float3(x, 0, y), make_float3(x*radius, 0, y*radius) + xlate);
-    }
-    float min = 0.02f;
-    float max = 3.5f;
-    chplane[nsides + 0] = make_plane( make_float3(0, -1, 0), make_float3(0, min, 0) + xlate);
-    float angle = 5.f/nsides * M_PIf * 2;
-    chplane[nsides + 1] = make_plane( make_float3(cos(angle),  .7f, sin(angle)), make_float3(0, max, 0) + xlate);
-    plane_buffer->unmap();
-    chull["planes"]->setBuffer(plane_buffer);
-    chull["chull_bbmin"]->setFloat(-radius + xlate.x, min + xlate.y, -radius + xlate.z);
-    chull["chull_bbmax"]->setFloat( radius + xlate.x, max + xlate.y,  radius + xlate.z);
-  }
-
   // Floor geometry
   std::string pgram_ptx( ptxpath( "gpuRayTracer", "parallelogram.cu" ) );
   Geometry parallelogram = m_context->createGeometry();
@@ -395,17 +365,17 @@ void Tutorial::createGeometry()
 
   // Materials
   std::string box_chname;
-  if(m_tutnum >= 8){
-    box_chname = "box_closest_hit_radiance";
-  } else if(m_tutnum >= 3){
+  //if(m_tutnum >= 8){
+  //  box_chname = "box_closest_hit_radiance";
+  //} else if(m_tutnum >= 3){
     box_chname = "closest_hit_radiance3";
-  } else if(m_tutnum >= 2){
-    box_chname = "closest_hit_radiance2";
-  } else if(m_tutnum >= 1){
-    box_chname = "closest_hit_radiance1";
-  } else {
-    box_chname = "closest_hit_radiance0";
-  }
+  //} else if(m_tutnum >= 2){
+  //  box_chname = "closest_hit_radiance2";
+  //} else if(m_tutnum >= 1){
+  //  box_chname = "closest_hit_radiance1";
+  //} else {
+  //  box_chname = "closest_hit_radiance0";
+  //}
   
   Material box_matl = m_context->createMaterial();
   Program box_ch = m_context->createProgramFromPTXFile( m_ptx_path, box_chname );
@@ -421,22 +391,22 @@ void Tutorial::createGeometry()
   box_matl["reflectivity_n"]->setFloat( 0.2f, 0.2f, 0.2f );
 
   std::string floor_chname;
-  if(m_tutnum >= 7){
-    floor_chname = "floor_closest_hit_radiance";
-  } else if(m_tutnum >= 6){
-    floor_chname = "floor_closest_hit_radiance5";
-  } else if(m_tutnum >= 4){
-    floor_chname = "floor_closest_hit_radiance4";
-  } else if(m_tutnum >= 3){
+  //if(m_tutnum >= 7){
+  //  floor_chname = "floor_closest_hit_radiance";
+  //} else if(m_tutnum >= 6){
+  //  floor_chname = "floor_closest_hit_radiance5";
+  //} else if(m_tutnum >= 4){
+  //  floor_chname = "floor_closest_hit_radiance4";
+  //} else if(m_tutnum >= 3){
     floor_chname = "closest_hit_radiance3";
-  } else if(m_tutnum >= 2){
-    floor_chname = "closest_hit_radiance2";
-  } else if(m_tutnum >= 1){
-    floor_chname = "closest_hit_radiance1";
-  } else {
-    floor_chname = "closest_hit_radiance0";
-  }
-    
+  //} else if(m_tutnum >= 2){
+  //  floor_chname = "closest_hit_radiance2";
+  //} else if(m_tutnum >= 1){
+  //  floor_chname = "closest_hit_radiance1";
+  //} else {
+  //  floor_chname = "closest_hit_radiance0";
+  //}
+  //  
   Material floor_matl = m_context->createMaterial();
   Program floor_ch = m_context->createProgramFromPTXFile( m_ptx_path, floor_chname );
   floor_matl->setClosestHitProgram( 0, floor_ch );
@@ -450,55 +420,22 @@ void Tutorial::createGeometry()
   floor_matl["reflectivity"]->setFloat( 0.1f, 0.1f, 0.1f );
   floor_matl["reflectivity_n"]->setFloat( 0.05f, 0.05f, 0.05f );
   floor_matl["phong_exp"]->setFloat( 88 );
-  floor_matl["tile_v0"]->setFloat( 0.25f, 0, .15f );
-  floor_matl["tile_v1"]->setFloat( -.15f, 0, 0.25f );
-  floor_matl["crack_color"]->setFloat( 0.1f, 0.1f, 0.1f );
-  floor_matl["crack_width"]->setFloat( 0.02f );
-
-  // Glass material
-  Material glass_matl;
-  if( chull.get() ) {
-    Program glass_ch = m_context->createProgramFromPTXFile( m_ptx_path, "glass_closest_hit_radiance" );
-    std::string glass_ahname;
-    if(m_tutnum >= 10){
-      glass_ahname = "glass_any_hit_shadow";
-    } else {
-      glass_ahname = "any_hit_shadow";
-    }
-    Program glass_ah = m_context->createProgramFromPTXFile( m_ptx_path, glass_ahname );
-    glass_matl = m_context->createMaterial();
-    glass_matl->setClosestHitProgram( 0, glass_ch );
-    glass_matl->setAnyHitProgram( 1, glass_ah );
-
-    glass_matl["importance_cutoff"]->setFloat( 1e-2f );
-    glass_matl["cutoff_color"]->setFloat( 0.34f, 0.55f, 0.85f );
-    glass_matl["fresnel_exponent"]->setFloat( 3.0f );
-    glass_matl["fresnel_minimum"]->setFloat( 0.1f );
-    glass_matl["fresnel_maximum"]->setFloat( 1.0f );
-    glass_matl["refraction_index"]->setFloat( 1.4f );
-    glass_matl["refraction_color"]->setFloat( 1.0f, 1.0f, 1.0f );
-    glass_matl["reflection_color"]->setFloat( 1.0f, 1.0f, 1.0f );
-    glass_matl["refraction_maxdepth"]->setInt( 100 );
-    glass_matl["reflection_maxdepth"]->setInt( 100 );
-    float3 extinction = make_float3(.80f, .89f, .75f);
-    glass_matl["extinction_constant"]->setFloat( log(extinction.x), log(extinction.y), log(extinction.z) );
-    glass_matl["shadow_attenuation"]->setFloat( 0.4f, 0.7f, 0.4f );
-  }
+  //floor_matl["tile_v0"]->setFloat( 0.25f, 0, .15f );
+  //floor_matl["tile_v1"]->setFloat( -.15f, 0, 0.25f );
+  //floor_matl["crack_color"]->setFloat( 0.1f, 0.1f, 0.1f );
+  //floor_matl["crack_width"]->setFloat( 0.02f );
 
   // Create GIs for each piece of geometry
   std::vector<GeometryInstance> gis;
   gis.push_back( m_context->createGeometryInstance( box, &box_matl, &box_matl+1 ) );
   gis.push_back( m_context->createGeometryInstance( parallelogram, &floor_matl, &floor_matl+1 ) );
-  if(chull.get())
-    gis.push_back( m_context->createGeometryInstance( chull, &glass_matl, &glass_matl+1 ) );
 
   // Place all in group
   GeometryGroup geometrygroup = m_context->createGeometryGroup();
   geometrygroup->setChildCount( static_cast<unsigned int>(gis.size()) );
   geometrygroup->setChild( 0, gis[0] );
   geometrygroup->setChild( 1, gis[1] );
-  if(chull.get())
-    geometrygroup->setChild( 2, gis[2] );
+
   geometrygroup->setAcceleration( m_context->createAcceleration("NoAccel","NoAccel") );
 
   m_context["top_object"]->set( geometrygroup );
