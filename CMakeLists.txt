@@ -271,13 +271,8 @@ endfunction()
     src/main.cpp
     src/Scene.cpp
     src/Image.cpp
-    src/GPUManager.cpp
-
-    
-#    src/tutorial.cpp
-    inc/tutorial.h
+   
     CUDA/tutorial3.cu
-
 
     # These files are common among multiple samples
     CUDA/box.cu
@@ -286,12 +281,9 @@ endfunction()
 
     inc/RayTraceImageData.h
     inc/jsonParameterReader.h
- 
     src/jsonParameterReader.cpp
 
     inc/GPUManager.hpp
-    inc/Image.hpp
-    inc/Scene.hpp
     inc/GPURayTracer.hpp
 
     )
