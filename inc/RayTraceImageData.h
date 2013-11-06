@@ -7,6 +7,8 @@
 #ifndef RAY_TRACE_IMAGE_H
 #define RAY_TRACE_IMAGE_H
 
+#include <vector>
+
 class Position
 { 
 public:

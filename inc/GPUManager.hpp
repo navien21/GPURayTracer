@@ -1,5 +1,8 @@
 //#pragma once
 
+#ifndef GRT_GPUMANAGER_HPP
+#define GRT_GPUMANAGER_HPP
+
 #include <optix.h>
 #include <optix_math.h>
 #include <optixu/optixu_vector_types.h>
@@ -27,8 +30,6 @@ struct TriangleLight
 };
 
 
-#ifndef GRT_GPUMANAGER_HPP
-#define GRT_GPUMANAGER_HPP
 
 namespace grt {
 

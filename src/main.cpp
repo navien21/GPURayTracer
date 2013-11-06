@@ -65,6 +65,10 @@ int main(int argc, char ** argv)
     // Create a model
     grt::Model model;
 
+	// Setup optix renderer
+	grt::OptixRenderView optixRenderView(argc, argv);
+	model.registerObserver(&optixRenderView);
+
     // Setup Image Saver
     std::auto_ptr<grt::ImageSaverView> imagefileview( (img_file.empty()) ? 0 : new grt::ImageSaverView(img_file) );
 

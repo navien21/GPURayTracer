@@ -282,9 +282,12 @@ endfunction()
     inc/RayTraceImageData.h
     inc/jsonParameterReader.h
     src/jsonParameterReader.cpp
+    src/OptixRenderView.cpp
 
     inc/GPUManager.hpp
     inc/GPURayTracer.hpp
+    inc/Tutorial.h
+    inc/TutorialClass.hpp
 
     )
 

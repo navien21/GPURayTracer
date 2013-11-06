@@ -9,6 +9,11 @@
 
 #include "RayTraceImageData.h"
 #include "jsonParameterReader.h"
+#include <set>
+
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
+#include <boost/foreach.hpp>
 
 
 namespace grt {
@@ -58,6 +63,25 @@ namespace grt {
                 std::cout << "Model Update received! [" << __FILE__ << ":" << __LINE__ << "]" << std::endl;
             }
     };
+
+	class OptixRenderView
+		: public IModelObserver
+	{
+	private:
+		int argc;
+		char **argv;
+	public:
+		OptixRenderView(int inArgc, char *inArgv[])
+			: argv(inArgv),argc(inArgc)
+		{ }
+		void setUpAndDisplayImageWithOptix(const Model &model);
+		void modelUpdated(const Model &_model )
+		{
+			std::cout<<"Model update received by optixRenderView object."<<std::endl;
+			setUpAndDisplayImageWithOptix(_model);
+		}
+	};
+
 
     class Controller {
         protected:
