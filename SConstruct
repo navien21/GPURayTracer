@@ -4,8 +4,9 @@ grt_env.Decider("MD5-timestamp")
 grt_env.Append(CPPPATH = ['inc'])
 
 grt_src = """
-src/Scene.cpp
-src/Image.cpp
+src/OptixRenderView.cpp
+src/ParseJSONController.cpp
+src/RenderedImageView.cpp
 src/GPUManager.cpp
 """.split()
 
@@ -19,7 +20,6 @@ grt_env.Program('grt', 'src/main.cpp')
 # Build Test Progam
 test_grt_srcs = """
 test/test_suite.cpp
-test/SceneTest.cpp
 """.split()
 
 test_grt_env = grt_env.Clone()

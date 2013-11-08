@@ -2,93 +2,100 @@
 #include <iostream>
 #include <set>
 
-//#include <boost/program_options.hpp>
+#include <boost/program_options.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 
-#include <Scene.hpp>
-#include <Image.hpp>
 #include <GPUManager.hpp>
-#include <GPURayTracer.hpp>
 
+#include <Model.hpp>
+
+#include <ParseJSONController.hpp>
+
+#include <RenderedImageViewer.hpp>
+#include <OptiXRenderView.hpp>
 
 
 int main(int argc, char ** argv)
 {
-    std::string json_file;
-    std::string img_file;
+	std::string json_file;
+	std::string img_file;
 
-    // Setup program options
-    /*boost::program_options::options_description desc("Allowed options");
-    desc.add_options()
-        ("help,h","display this text")
-        ("jsonfile,j",boost::program_options::value<std::string>(&json_file)->required(),"path to the json file describing the scene to render")
-        ("imgfile,i",boost::program_options::value<std::string>(&img_file),"path to save the rendered png file")
-    ;
+	// Setup program options
+#if 1
+	boost::program_options::options_description desc("Allowed options");
+	desc.add_options()
+		("help,h","display this text")
+		("jsonfile,j",boost::program_options::value<std::string>(&json_file)->required(),"path to the json file describing the scene to render")
+		("imgfile,i",boost::program_options::value<std::string>(&img_file),"path to save the rendered png file")
+		;
 
-    // Parse program options
-    boost::program_options::variables_map vm;
-    boost::program_options::store(boost::program_options::parse_command_line(argc,argv,desc), vm);
+	// Parse program options
+	boost::program_options::variables_map vm;
+	boost::program_options::store(boost::program_options::parse_command_line(argc,argv,desc), vm);
 
-    if (vm.count("help")) {
-        std::cout << desc << std::endl;
-        return 1;
-    }
+	if (vm.count("help")) {
+		std::cout << desc << std::endl;
+		return 1;
+	}
 
-    try {
-        boost::program_options::notify(vm);
-    } catch (std::exception & e) {
-        std::cerr << "Program Options Parsing Error: " << e.what() << std::endl;
-        return -1;
-    }
-	*/
-
-	if (argc<2)
-	{
+	try {
+		boost::program_options::notify(vm);
+	} catch (std::exception & e) {
+		std::cerr << "Program Options Parsing Error: " << e.what() << std::endl;
+		return -1;
+	}
+#else
+	if (argc<2) {
 		std::cout<<"Usage: "<<argv[0]<<" json_file img_file"<<std::endl;
 		std::cout<<"Where json_file is the path to the input json parameter file that describing the scene (required)"<<std::endl;
 		std::cout<<"And img_file is the path to save the rendered png file (optional)"<<std::endl;
-	}
-	else 
-	{
+	} else {
 		json_file = argv[1];
 	}
-	if (argc>2)
-	{
-		img_file = argv[2];
+	if (argc>2) { img_file = argv[2];
 	}
 	std::cout<<"Got command line arguments json_file = "<<json_file<<", img_file = "<<img_file<<std::endl;
+#endif
 
-    // Initialize GPU
-    grt::GPUManager gman;
+	// Initialize GPU
+	grt::GPUManager gman;
 
-    // Create a model
-    grt::Model model;
+	// Create a model
+	grt::Model model;
+
+	// Setup Rendered Viewer
+	grt::RenderedImageViewer imageView(argc,argv);
+	model.registerObserver(&imageView);
 
 	// Setup optix renderer
-	grt::OptixRenderView optixRenderView(argc, argv);
+	grt::OptixRenderView optixRenderView(1080u, 720u);
 	model.registerObserver(&optixRenderView);
 
-    // Setup Image Saver
-    std::auto_ptr<grt::ImageSaverView> imagefileview( (img_file.empty()) ? 0 : new grt::ImageSaverView(img_file) );
+	// Setup Image Saver
+	std::auto_ptr<grt::ImageSaverView> imagefileview( (img_file.empty()) ? 0 : new grt::ImageSaverView(img_file) );
 
-    // Register views with Model
-    //model.registerObserver(&gman);
-    if (imagefileview.get()) model.registerObserver(imagefileview.get());
+	// Register views with Model
+	//model.registerObserver(&gman);
+	if (imagefileview.get()) model.registerObserver(imagefileview.get());
 
-    try {
-        grt::ParseJSONController jsonParser(model,json_file);
-        jsonParser.execute(); // notifies model observers
-    } catch (std::exception & e) {
-        std::cerr << "Unable to ParseJSON: " << e.what() << std::endl;
-        return -2;
-    }
+	try {
+		grt::ParseJSONController jsonParser(model,json_file);
+		jsonParser.execute(); // notifies model observers
+	} catch (std::exception & e) {
+		std::cerr << "Unable to ParseJSON: " << e.what() << std::endl;
+		return -2;
+	}
 
-    // Cleanup
+	// Launch GUI View
+	imageView.run();
 
-    // Register views with Model
-    //model.unregisterObserver(&gman);
-    if (imagefileview.get()) model.unregisterObserver(imagefileview.get());
+	// Cleanup
 
-    return 0;
+	// Register views with Model
+	//model.unregisterObserver(&gman);
+	if (imagefileview.get()) model.unregisterObserver(imagefileview.get());
+	mode.unregisterObserver(&imageView);
+
+	return 0;
 }
