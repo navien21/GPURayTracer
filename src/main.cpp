@@ -6,10 +6,12 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 
-#include <Scene.hpp>
-#include <Image.hpp>
+//#include <Scene.hpp>
+//#include <Image.hpp>
 #include <GPUManager.hpp>
-#include <GPURayTracer.hpp>
+#include <OptiXRenderView.hpp>
+#include <ImageSaverView.hpp>
+#include <ParseJSONController.hpp>
 
 
 
@@ -59,15 +61,12 @@ int main(int argc, char ** argv)
 	}
 	std::cout<<"Got command line arguments json_file = "<<json_file<<", img_file = "<<img_file<<std::endl;
 
-    // Initialize GPU
-    grt::GPUManager gman;
-
     // Create a model
     grt::Model model;
 
 	// Setup optix renderer
-	grt::OptixRenderView optixRenderView(argc, argv);
-	model.registerObserver(&optixRenderView);
+	grt::OptiXRenderView optiXRenderView(argc, argv);
+	model.registerObserver(&optiXRenderView);
 
     // Setup Image Saver
     std::auto_ptr<grt::ImageSaverView> imagefileview( (img_file.empty()) ? 0 : new grt::ImageSaverView(img_file) );

@@ -1,7 +1,7 @@
 
 
 #include <iostream>
-#include <GPURayTracer.hpp>
+#include <OptiXRenderView.hpp>
 
 #include <optixu/optixpp_namespace.h>
 #include <optixu/optixu_math_namespace.h>
@@ -378,7 +378,7 @@ void Tutorial::createGeometry()
 
 
 namespace grt {
-void OptixRenderView::setUpAndDisplayImageWithOptix(const Model &model)
+void OptiXRenderView::setUpAndDisplayImageWithOptiX(const Model &model)
 {
 	GLUTDisplay::init( argc,  argv);
 

@@ -269,23 +269,21 @@ endfunction()
   OPTIX_add_sample_executable( gpuRayTracer
 
     src/main.cpp
-    src/Scene.cpp
-    src/Image.cpp
+ 
    
     CUDA/tutorial3.cu
 
     # These files are common among multiple samples
     CUDA/box.cu
-    inc/commonStructs.h
     CUDA/parallelogram.cu
 
     inc/RayTraceImageData.h
     inc/jsonParameterReader.h
     src/jsonParameterReader.cpp
-    src/OptixRenderView.cpp
+    src/OptiXRenderView.cpp
 
     inc/GPUManager.hpp
-    inc/GPURayTracer.hpp
+    inc/OptiXRenderView.hpp
     inc/Tutorial.h
     inc/TutorialClass.hpp
 
