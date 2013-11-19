@@ -12,7 +12,8 @@
 
 #include <ParseJSONController.hpp>
 
-#include <RenderedImageViewer.hpp>
+#include <RenderedImageView.hpp>
+#include <ImageSaverView.hpp>
 #include <OptiXRenderView.hpp>
 
 
@@ -65,7 +66,7 @@ int main(int argc, char ** argv)
 	grt::Model model;
 
 	// Setup Rendered Viewer
-	grt::RenderedImageViewer imageView(argc,argv);
+	grt::RenderedImageView imageView(argc,argv);
 	model.registerObserver(&imageView);
 
 	// Setup optix renderer
@@ -95,7 +96,7 @@ int main(int argc, char ** argv)
 	// Register views with Model
 	//model.unregisterObserver(&gman);
 	if (imagefileview.get()) model.unregisterObserver(imagefileview.get());
-	mode.unregisterObserver(&imageView);
+	model.unregisterObserver(&imageView);
 
 	return 0;
 }

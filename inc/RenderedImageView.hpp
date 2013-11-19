@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Model.hpp>
+#include <SampleScene.h>
 
 namespace grt {
 
@@ -8,6 +9,7 @@ class Scene : public SampleScene {
 	Scene()
 	: SampleScene()
 	{
+		
 
 	}
 };
@@ -17,7 +19,7 @@ class RenderedImageView
 {
 
 	protected:
-		Scene scene;
+		Scene *scene;
 
 	public:
 		RenderedImageView(int,char**);

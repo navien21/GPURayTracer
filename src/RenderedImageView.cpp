@@ -1,6 +1,5 @@
 #include <RenderedImageView.hpp>
-
-#include <GLUTDisplay.hpp>
+#include <GLUTDisplay.h>
 
 namespace grt {
 
@@ -10,11 +9,11 @@ namespace grt {
 		GLUTDisplay::init(argc,argv);
 	}
 
-	RenderedImageView::run() {
-		GLUTDisplay::run("GRT View", &scene);
+	void RenderedImageView::run() {
+		GLUTDisplay::run("GRT View", scene);
 	}
 
-	RenderedImageView::modelUpdated(const Model & _model) {
+	void RenderedImageView::modelUpdated(const Model & _model) {
 		if (_model.image) {
 			// Refresh display with new image
 		}

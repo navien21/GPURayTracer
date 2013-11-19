@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Model.hpp>
+#include <iostream>
 
 namespace grt {
 
