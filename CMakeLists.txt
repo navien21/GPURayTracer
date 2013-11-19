@@ -267,11 +267,7 @@ endfunction()
 
   # See top level CMakeLists.txt file for documentation of OPTIX_add_sample_executable.
   OPTIX_add_sample_executable( gpuRayTracer
-
-    src/main.cpp
-    src/Scene.cpp
-    src/Image.cpp
-   
+  
     CUDA/tutorial3.cu
 
     # These files are common among multiple samples
@@ -279,15 +275,22 @@ endfunction()
     inc/commonStructs.h
     CUDA/parallelogram.cu
 
-    inc/RayTraceImageData.h
-    inc/jsonParameterReader.h
-    src/jsonParameterReader.cpp
-    src/OptixRenderView.cpp
-
+    inc/Controller.hpp
     inc/GPUManager.hpp
-    inc/GPURayTracer.hpp
-    inc/Tutorial.h
+    inc/ImageSaverView.hpp
+    inc/Model.hpp
+    inc/OptiXRenderView.hpp
+    inc/ParseJSONController.hpp
+    inc/RenderedImageView.hpp
     inc/TutorialClass.hpp
+
+
+    src/ParseJSONController.cpp
+    src/RenderedImageView.cpp
+    src/GPUManager.cpp
+    src/tutorial.cpp
+    src/main.cpp
+    src/OptixRenderView.cpp
 
     )
 
