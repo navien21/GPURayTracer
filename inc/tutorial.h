@@ -1,4 +1,6 @@
 //
+// This file was taken from NVIDIA SDK for the "tutorial" sample.  The tutorial cuda files
+// make use of it.  It is not changed much from the original.  The NVIDIA copyright follows:
 ///*
 // * Copyright (c) 2008 - 2009 NVIDIA Corporation.  All rights reserved.
 // *
@@ -22,7 +24,6 @@
 #include <optix.h>
 #include <optix_math.h>
 // Used by all the tutorial cuda files
-//#include "commonStructs.h"
 #include "GPUManager.hpp"
 
 using namespace optix;
