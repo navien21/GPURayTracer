@@ -1,7 +1,6 @@
-//#pragma once
+/* Includes structures needed for OptiX processing */
 
-#ifndef GRT_GPUMANAGER_HPP
-#define GRT_GPUMANAGER_HPP
+#pragma once
 
 #include <optix.h>
 #include <optix_math.h>
@@ -47,7 +46,6 @@ namespace grt {
 
 }; // grt namespace
 
-#endif//GRT_GPUMANAGER_HPP
 
 // tutorial.h content below... yet to get working
 /*

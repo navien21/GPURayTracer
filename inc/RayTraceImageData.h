@@ -1,11 +1,10 @@
 /*
  * Includes items necessary to construct an image or scene.
- * Note prints functions could be set up to work as << operators
- * but don't remember how to do that right now.
  */
 
-#ifndef RAY_TRACE_IMAGE_H
-#define RAY_TRACE_IMAGE_H
+
+#pragma once
+
 
 #include <vector>
 
@@ -17,7 +16,13 @@ public:
 	float z;
 	void print()
 	{
-		std::cout<<"position: x= "<<x<<", y= "<<y<<", z= "<<z<<std::endl;
+		std::cout<<*this<<std::endl;
+
+	}
+	friend std::ostream & operator<<(std::ostream & _out, const Position & pos) 
+	{
+		_out << "position: x= "  << pos.x << ", y= " << pos.y << ", z= " << pos.z;
+		return _out;
 	}
 };
 
@@ -29,7 +34,12 @@ public:
 	float b;
 	void print()
 	{
-		std::cout<<"color: r= "<<r<<", g= "<<g<<", b= "<<b<<std::endl;
+		std::cout<<*this<<std::endl;
+	}
+	friend std::ostream & operator<<(std::ostream & _out, const Color & c) 
+	{
+		_out << "color: r=" << c.r << ", g=" << c.g << ", b= " << c.b;
+		return _out;
 	}
 };
 
@@ -41,8 +51,15 @@ public:
 
   void print()
   {
-	  position.print();
-	  color.print();
+	  std::cout<<*this<<std::endl;
+	  //position.print();
+	  //color.print();
+  }
+
+  friend std::ostream & operator<<(std::ostream & _out, const Light & light) 
+  {
+	   _out << "Light: " << light.position << " " << light.color;
+	   return _out;
   }
 };  
 
@@ -53,13 +70,16 @@ public:
     std::vector< Light > lights;
 	void print()
 	{
-		std::cout<<"totalBrightness: "<<totalBrightness<<std::endl;
-		int nLights = lights.size();
-		for (int i=0; i<nLights; ++i)
+		std::cout<<*this<<std::endl;
+	}
+	friend std::ostream & operator<<(std::ostream & _out, const Lighting & lighting) 
+	{
+		_out << "Lighting: totalBrightness=" << lighting.totalBrightness << "\n";
+		for (int i=0; i< (int)lighting.lights.size(); ++i) 
 		{
-			std::cout<<"light number: "<<i<<std::endl;
-			lights[i].print();
+			_out << "#" << (i+1) << " " << lighting.lights[i] << "\n";
 		}
+		return _out;
 	}
 };
 
@@ -136,6 +156,4 @@ public:
 };
 
   
-
-#endif
 

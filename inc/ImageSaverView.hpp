@@ -1,16 +1,9 @@
+/* ImageSaverView class declaration.  Inherits from IModelObserver
+*  Saves an image to a file.  Not implemented yet */
 
+#pragma once
 
-#ifndef GPU_RAY_TRACER_IMAGE_SAVER_VIEW_H
-#define GPU_RAY_TRACER_IMAGE_SAVER_VIEW_H
-
-#include "RayTraceImageData.h"
-#include <set>
-
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/json_parser.hpp>
-#include <boost/foreach.hpp>
 #include <Model.hpp>
-#include <Controller.hpp>
 
 namespace grt {
 
@@ -26,11 +19,10 @@ namespace grt {
 
             void modelUpdated(const Model & _model) {
                 // TODO : save to file
-                std::cout << "Model Update received! [" << __FILE__ << ":" << __LINE__ << "]" << std::endl;
+                std::cout << "ImageSaverView Model Update received! [" << __FILE__ << ":" << __LINE__ << "]" << std::endl;
             }
     };
 
 };
 
-#endif
 

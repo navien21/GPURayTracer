@@ -1,13 +1,12 @@
 
 #include <iostream>
 #include <set>
+/* This file includes the main function */
 
 //#include <boost/program_options.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 
-//#include <Scene.hpp>
-//#include <Image.hpp>
 #include <GPUManager.hpp>
 #include <OptiXRenderView.hpp>
 #include <ImageSaverView.hpp>
@@ -20,8 +19,9 @@ int main(int argc, char ** argv)
     std::string json_file;
     std::string img_file;
 
+#if 0
     // Setup program options
-    /*boost::program_options::options_description desc("Allowed options");
+    boost::program_options::options_description desc("Allowed options");
     desc.add_options()
         ("help,h","display this text")
         ("jsonfile,j",boost::program_options::value<std::string>(&json_file)->required(),"path to the json file describing the scene to render")
@@ -43,8 +43,7 @@ int main(int argc, char ** argv)
         std::cerr << "Program Options Parsing Error: " << e.what() << std::endl;
         return -1;
     }
-	*/
-
+#else
 	if (argc<2)
 	{
 		std::cout<<"Usage: "<<argv[0]<<" json_file img_file"<<std::endl;
@@ -60,6 +59,7 @@ int main(int argc, char ** argv)
 		img_file = argv[2];
 	}
 	std::cout<<"Got command line arguments json_file = "<<json_file<<", img_file = "<<img_file<<std::endl;
+#endif
 
     // Create a model
     grt::Model model;

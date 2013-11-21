@@ -1,20 +1,15 @@
-//#pragma once
-#ifndef TUTORIAL_CLASS_H
-#define TUTORIAL_CLASS_H
-
-/*
-#include <optix.h>
-#include <optix_math.h>
-#include <optixu/optixu_vector_types.h>
-#include <device_functions.h>
+/* Includes the Tutorial class delaration.  This class was derived from the 
+Tutorial sample given in the NVDIA Optix SDK.
 */
+
+
+#pragma once
 
 #include <optixu/optixpp_namespace.h>
 #include <optixu/optixu_math_namespace.h>
 #include <iostream>
 #include <GLUTDisplay.h>
 #include <ImageLoader.h>
-//#include "commonStructs.h"
 #include "GPUManager.hpp"
 #include <cstdlib>
 #include <cstring>
@@ -58,4 +53,3 @@ private:
   RayTraceImageData imageData;
 };
 
-#endif

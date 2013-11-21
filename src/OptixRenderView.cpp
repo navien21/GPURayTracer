@@ -8,14 +8,12 @@
 #include <iostream>
 #include <GLUTDisplay.h>
 #include <ImageLoader.h>
-//#include "commonStructs.h"
 #include "GPUManager.hpp"
 #include <cstdlib>
 #include <cstring>
 #include <sstream>
 #include <math.h>
 
-//#include "Tutorial.h"
 #include <vector>
 
 #include "RayTraceImageData.h"

@@ -1,19 +1,9 @@
 /*
- * Includes items necessary to construct an image or scene.
- * Note prints functions could be set up to work as << operators
- * but don't remember how to do that right now.
+ * Controller Class Declaration
  */
 
-#ifndef GPU_RAY_TRACER_CONTROLLER_H
-#define GPU_RAY_TRACER_CONTROLLER_H
+#pragma once
 
-#include "RayTraceImageData.h"
-#include "jsonParameterReader.h"
-#include <set>
-
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/json_parser.hpp>
-#include <boost/foreach.hpp>
 #include <Model.hpp>
 
 namespace grt {
@@ -35,6 +25,3 @@ namespace grt {
 
 };
   
-
-#endif
-

@@ -1,19 +1,22 @@
 /*
- * Includes items necessary to construct an image or scene.
- * Note prints functions could be set up to work as << operators
- * but don't remember how to do that right now.
- */
+ Includes the Model and IModelObserver class declarations.
 
-#ifndef MODEL_H
-#define MODEL_H
+ The Model has the items necessary to construct a modified OptiX image.
+
+ In normal use, one or more IModelObserver objects are registered
+ to the model.  Specific observers or viewers may inherit from 
+ IModelObservers.
+
+ A controller updates the model and calls the model notifyObservers
+ function which calls the modelUpdated function of each of the
+ observers registered to the model.
+
+*/
+
+#pragma once
 
 #include "RayTraceImageData.h"
-#include "jsonParameterReader.h"
 #include <set>
-
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/json_parser.hpp>
-#include <boost/foreach.hpp>
 
 
 namespace grt {
@@ -50,6 +53,3 @@ namespace grt {
 
 }; // grt
   
-
-#endif
-

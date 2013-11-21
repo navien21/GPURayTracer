@@ -1,5 +1,6 @@
-#ifndef GRT_GPUMANAGER_CPP
-#define GRT_GPUMANAGER_CPP
+// This is not really used.
+
+#pragma once
 
 #include <GPUManager.hpp>
 
@@ -11,6 +12,5 @@ void GPUManager::download(Image &) {}
 
 }; // grt namespace
 
-#endif//GRT_GPUMANAGER_CPP
 
 

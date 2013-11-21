@@ -1,7 +1,7 @@
 /*
- * Includes items necessary to construct an image or scene.
- * Note prints functions could be set up to work as << operators
- * but don't remember how to do that right now.
+ Includes the ParseJSONController class declaration.  It inherits from Controller
+ To use:
+ Construct with a Model object and JSON file name, then execute.
  */
 
 #ifndef GPU_RAY_TRACER_PARSE_JSON_CONTROLLER_H
@@ -24,15 +24,25 @@ namespace grt {
     {
         protected:
             boost::property_tree::ptree jsonPtree;
+			std::string jsonFileName;
         public:
-            ParseJSONController(Model & _model, const std::string & _jsonFile)
-            : Controller(_model)
+            ParseJSONController(Model & _model, const std::string &_jsonFile)
+            : Controller(_model), jsonFileName(_jsonFile)
             {
-                boost::property_tree::read_json(_jsonFile,jsonPtree);
-				LoadRayTraceImageFromJsonFile(_jsonFile, model.image);
+                
             }
 
+			void updateModelFromJSONFile()
+			{
+				// Try to load the JSON file.
+				boost::property_tree::read_json(jsonFileName,jsonPtree);
+				// This updates the image portion of the Model.
+				LoadRayTraceImageFromJsonFile(jsonFileName, model.image);
+			}
             void execute() {
+				// Update the model with the JSON information
+				std::cout<<"ParseJSONController refreshing Model Information from JSON file "<<jsonFileName<<std::endl;
+				updateModelFromJSONFile();
  
                 // let everyone know
 				std::cout<<"ParseJSONController calling model.notifyObservers"<<std::endl;
