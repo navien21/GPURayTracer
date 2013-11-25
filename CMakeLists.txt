@@ -177,7 +177,11 @@ if( APPLE )
 endif()
 
 # Locate the NVRT distribution.  Search the SDK first, then look in the system.
-set(OptiX_INSTALL_DIR "C:/Program Files/NVIDIA Corporation/OptiX SDK 3.0.1" CACHE PATH "Path to OptiX installed location.")
+if ( APPLE )
+  set(OptiX_INSTALL_DIR "/usr/local/optix" CACHE PATH "Path to OptiX installed location.")
+else ( APPLE )
+  set(OptiX_INSTALL_DIR "C:/Program Files/NVIDIA Corporation/OptiX SDK 3.0.1" CACHE PATH "Path to OptiX installed location.")
+endif( APPLE )
 
 # Search for the OptiX libraries and include files.
 find_package(OptiX REQUIRED)
