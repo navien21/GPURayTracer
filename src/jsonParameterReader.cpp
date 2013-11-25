@@ -68,13 +68,17 @@ void LoadRayTraceImageFromJsonFile(std::string fileName, RayTraceImageData &imag
   std::cout<<"Trying to load in file "<<fileName<<" to boost property tree structure."<<std::endl;
   read_json(fileName,pt);
   std::cout<<"Loaded file!"<<std::endl;
- 
+
+  // Read the title
+  image.imageTitle = pt.get("image.title","GPURayTracer");
+
+  // Should default lighting be used?
   image.useDefaultLighting = pt.get("image.useDefaultLights",true);
+  
   
   // Go ahead and try to read in the rest of the lighting information
   if ( !image.useDefaultLighting )
   {
-	  image.useDefaultLighting = false;
 	  std::cout<<"image.useDefaultLighting false.  "
 		  <<"Will try to load light information from json file"<<std::endl;
 
@@ -94,6 +98,31 @@ void LoadRayTraceImageFromJsonFile(std::string fileName, RayTraceImageData &imag
 		  image.lighting.lights.push_back(lightToAppend);
 	  }
   }
+
+  // Should the default box be used
+  image.useDefaultBox = pt.get("image.useDefaultBox",true);
+
+  if ( !image.useDefaultBox )
+  {
+	  std::cout<<"image.useDefaultBox is false.  "
+			<<"Will try to load box information from json file"<<std::endl;
+
+	  	  // Now try to read in the boxes
+	  BOOST_FOREACH( ptree::value_type &v, pt.get_child("image.boxes") )
+	  {
+		  Box boxToAppend;
+		  boxToAppend.minPosition.x = v.second.get<float>("MinXPos");
+		  boxToAppend.minPosition.y = v.second.get<float>("MinYPos");
+		  boxToAppend.minPosition.z = v.second.get<float>("MinZPos");
+		  boxToAppend.maxPosition.x = v.second.get<float>("MaxXPos");
+		  boxToAppend.maxPosition.y = v.second.get<float>("MaxYPos");
+		  boxToAppend.maxPosition.z = v.second.get<float>("MaxZPos");
+		  image.boxes.push_back(boxToAppend);
+	  }
+	
+  }
+
+  
 
   std::cout<<"Image data loaded from file "<<fileName<<std::endl;
   image.print();

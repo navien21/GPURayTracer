@@ -52,8 +52,7 @@ public:
   void print()
   {
 	  std::cout<<*this<<std::endl;
-	  //position.print();
-	  //color.print();
+	 
   }
 
   friend std::ostream & operator<<(std::ostream & _out, const Light & light) 
@@ -97,7 +96,11 @@ class Box
 public:
   Position minPosition;
   Position maxPosition;
-  // Material would go here? Or maybe several colors?
+    friend std::ostream & operator<<(std::ostream & _out, const Box & box) 
+  {
+	   _out << "minPosition= " << box.minPosition << ", maxPosition= "<<box.maxPosition;
+	   return _out;
+  }
 };
 
 // May become a shape
@@ -111,6 +114,7 @@ public:
 class RayTraceImageData
 {
 public:
+  std::string imageTitle;
   bool useDefaultLighting;
   bool useDefaultCamera;
   bool useDefaultParallelogramFloor;
@@ -118,6 +122,7 @@ public:
 
   // Lighting information
   Lighting lighting;
+  std::vector< Box > boxes;
 
   /* Rest is not yet ready
   // Camera information
@@ -133,6 +138,7 @@ public:
   // Constructor.  Set everything to use defaults vectors are all size 0 by default
   // by default.
   RayTraceImageData():
+  imageTitle("GPURayTracer"),
   useDefaultLighting(true),
   useDefaultCamera(true),
   useDefaultParallelogramFloor(true),
@@ -143,12 +149,17 @@ public:
 
   void print()
   {
+	  std::cout<<"imageTitle = "<<imageTitle.c_str()<<std::endl;
 	  std::cout<<"useDefaultLighting = "<<useDefaultLighting<<std::endl;
 	  std::cout<<"useDefaultCamera = "<<useDefaultCamera<<std::endl;
 	  std::cout<<"useDefaultParallelogramFloor = "<<useDefaultParallelogramFloor<<std::endl;
 	  std::cout<<"useDefaultBox = "<<useDefaultBox<<std::endl;
 	  if (!useDefaultLighting)
 		lighting.print();
+	  if (!useDefaultBox)
+		  for (int i=0; i<(int)boxes.size(); ++i)
+			std::cout<<"Box:"<<i+1<<boxes[i]<<std::endl;
+
   }
 
   // Since no pointers the default assignment operator, copy constructor

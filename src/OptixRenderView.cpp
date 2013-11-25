@@ -265,13 +265,35 @@ void Tutorial::createGeometry()
   Program box_bounds = m_context->createProgramFromPTXFile( box_ptx, "box_bounds" );
   Program box_intersect = m_context->createProgramFromPTXFile( box_ptx, "box_intersect" );
 
-  // Create box
-  Geometry box = m_context->createGeometry();
-  box->setPrimitiveCount( 1u );
-  box->setBoundingBoxProgram( box_bounds );
-  box->setIntersectionProgram( box_intersect );
-  box["boxmin"]->setFloat( -2.0f, 0.0f, -2.0f );
-  box["boxmax"]->setFloat(  2.0f, 7.0f,  2.0f );
+  // Create boxes
+  std::vector< Geometry > boxes;
+  if (imageData.useDefaultBox)
+  {
+	Geometry box = m_context->createGeometry();
+	box->setPrimitiveCount( 1u );
+	box->setBoundingBoxProgram( box_bounds );
+	box->setIntersectionProgram( box_intersect );
+	box["boxmin"]->setFloat( -2.0f, 0.0f, -2.0f );
+	box["boxmax"]->setFloat(  2.0f, 7.0f,  2.0f );
+	boxes.push_back(box);
+  }
+  else
+  {
+	  for (int iBox=0; iBox<(int)imageData.boxes.size(); ++iBox)
+	  {
+		Geometry box = m_context->createGeometry();
+		box->setPrimitiveCount( 1u );
+		box->setBoundingBoxProgram( box_bounds );
+		box->setIntersectionProgram( box_intersect );
+		box["boxmin"]->setFloat( imageData.boxes[iBox].minPosition.x, 
+			imageData.boxes[iBox].minPosition.y,
+			imageData.boxes[iBox].minPosition.z);
+		box["boxmax"]->setFloat( imageData.boxes[iBox].maxPosition.x,
+			imageData.boxes[iBox].maxPosition.y,
+			imageData.boxes[iBox].maxPosition.z);
+		boxes.push_back(box);
+	  }
+  }
 
   // Floor geometry
   std::string pgram_ptx( ptxpath( "gpuRayTracer", "parallelogram.cu" ) );
@@ -307,19 +329,7 @@ void Tutorial::createGeometry()
   //  box_chname = "closest_hit_radiance0";
   //}
   
-  Material box_matl = m_context->createMaterial();
-  Program box_ch = m_context->createProgramFromPTXFile( m_ptx_path, box_chname );
-  box_matl->setClosestHitProgram( 0, box_ch );
-  if(m_tutnum >= 3) {
-    Program box_ah = m_context->createProgramFromPTXFile( m_ptx_path, "any_hit_shadow" );
-    box_matl->setAnyHitProgram( 1, box_ah );
-  }
-  box_matl["Ka"]->setFloat( 0.3f, 0.3f, 0.3f );
-  box_matl["Kd"]->setFloat( 0.6f, 0.7f, 0.8f );
-  box_matl["Ks"]->setFloat( 0.8f, 0.9f, 0.8f );
-  box_matl["phong_exp"]->setFloat( 88 );
-  box_matl["reflectivity_n"]->setFloat( 0.2f, 0.2f, 0.2f );
-
+ 
   std::string floor_chname;
   //if(m_tutnum >= 7){
   //  floor_chname = "floor_closest_hit_radiance";
@@ -357,14 +367,31 @@ void Tutorial::createGeometry()
 
   // Create GIs for each piece of geometry
   std::vector<GeometryInstance> gis;
-  gis.push_back( m_context->createGeometryInstance( box, &box_matl, &box_matl+1 ) );
+  for (int iBox=0; iBox<(int)boxes.size();++iBox)
+  {
+	 Material box_matl = m_context->createMaterial();
+     Program box_ch = m_context->createProgramFromPTXFile( m_ptx_path, box_chname );
+    box_matl->setClosestHitProgram( 0, box_ch );
+    if(m_tutnum >= 3) {
+      Program box_ah = m_context->createProgramFromPTXFile( m_ptx_path, "any_hit_shadow" );
+      box_matl->setAnyHitProgram( 1, box_ah );
+    }
+    box_matl["Ka"]->setFloat( 0.3f, 0.3f, 0.3f );
+    box_matl["Kd"]->setFloat( 0.6f, 0.7f, 0.8f );
+    box_matl["Ks"]->setFloat( 0.8f, 0.9f, 0.8f );
+    box_matl["phong_exp"]->setFloat( 88 );
+    box_matl["reflectivity_n"]->setFloat( 0.2f, 0.2f, 0.2f );
+
+	gis.push_back( m_context->createGeometryInstance( boxes[iBox], &box_matl, &box_matl+1 ) );
+  }
   gis.push_back( m_context->createGeometryInstance( parallelogram, &floor_matl, &floor_matl+1 ) );
 
   // Place all in group
   GeometryGroup geometrygroup = m_context->createGeometryGroup();
   geometrygroup->setChildCount( static_cast<unsigned int>(gis.size()) );
-  geometrygroup->setChild( 0, gis[0] );
-  geometrygroup->setChild( 1, gis[1] );
+  for (int i=0; i<(int)gis.size();++i)
+    geometrygroup->setChild( i, gis[i] );
+ // geometrygroup->setChild( 1, gis[1] );
 
   geometrygroup->setAcceleration( m_context->createAcceleration("NoAccel","NoAccel") );
 
@@ -386,7 +413,7 @@ void OptiXRenderView::setUpAndDisplayImageWithOptiX(const Model &model)
   int tutnum = 3;
 
   std::stringstream title;
-  title << "Tutorial " << tutnum;
+  title << model.image.imageTitle;
   try {
     Tutorial scene(tutnum, texture_path, model.image);
     scene.setDimensions( width, height );
