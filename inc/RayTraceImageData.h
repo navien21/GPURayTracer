@@ -122,15 +122,14 @@ public:
 
   // Lighting information
   Lighting lighting;
+
+  // Boxes
   std::vector< Box > boxes;
 
   /* Rest is not yet ready
   // Camera information
   Camera camera;
-  
-  // Box shapes
-  std::vector< Box > box;
-  
+
   // Parallelogram shapes (includes floor)
   std::vector< Parallelogram > parallelogram;
   */

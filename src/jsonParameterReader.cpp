@@ -1,24 +1,27 @@
 
 /*
- * Example json file contents with 2 lights:
- * 
+
+This file contains the LoadRayTraceImageFromJsonFile
+definition that loads in data from a json file
+to a RayTraceImageData object.
+
+Example json file contents with 2 lights and the default box:
 {
   "image":
   {
      "useDefaultLights": false,
-     "totalBrightness": 1,
+     "totalBrightness": 1.0,
      "lights":
      [
 
-       { "xPos": 5, "yPos": 10, "zPos": 15, 
-         "r": 255, "g": 255, "b": 255 },
+       { "xPos": -25.0, "yPos": 60.0, "zPos": -16.0, 
+         "r": 1.0, "g": 1.0, "b": 1.0},
 
-       { "xPos":25, "yPos": 30, "zPos": 35,
-         "r": 10, "g": 10, "b": 10 }
+       { "xPos":-20.0, "yPos": 60.0, "zPos": 16.0,
+         "r": 1.0, "g": 1.0, "b": 1.0}
      ]
   }
 }
-
 
  */
 
@@ -27,13 +30,6 @@
 #include <cstring>
 #include <sstream>
 #include <math.h>
-
-/*
-#include <boost/lambda/lambda.hpp>
-#include <iostream>
-#include <iterator>
-#include <algorithm>
-*/
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
@@ -83,7 +79,7 @@ void LoadRayTraceImageFromJsonFile(std::string fileName, RayTraceImageData &imag
 		  <<"Will try to load light information from json file"<<std::endl;
 
 	  // default to 1 
-	  image.lighting.totalBrightness = pt.get("image.totalBrightness",1.);
+	  image.lighting.totalBrightness = (float) pt.get("image.totalBrightness",1.);
 
 	  // Now try to read in the lights
 	  BOOST_FOREACH( ptree::value_type &v, pt.get_child("image.lights") )
@@ -122,10 +118,6 @@ void LoadRayTraceImageFromJsonFile(std::string fileName, RayTraceImageData &imag
 	
   }
 
-  
-
   std::cout<<"Image data loaded from file "<<fileName<<std::endl;
   image.print();
-
-
 }
