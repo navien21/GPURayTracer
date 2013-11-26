@@ -1,0 +1,34 @@
+{
+  "image":
+  {
+
+     "title": "Cube Steps Default Lights",
+     "useDefaultLights": true,
+   
+     "useDefaultBox": false,
+     "boxes":
+     [
+       { "MinXPos": -4.0, "MinYPos": 6.0, "MinZPos": 4.0,
+         "MaxXPos": -2.0, "MaxYPos": 8.0, "MaxZPos": 2.0 },
+
+      { "MinXPos": -4.0, "MinYPos": 4.0, "MinZPos": 0.0,
+         "MaxXPos": -2.0, "MaxYPos": 6.0, "MaxZPos": 2.0 },
+
+      { "MinXPos": -4.0, "MinYPos": 2.0, "MinZPos": -2.0,
+         "MaxXPos": -2.0, "MaxYPos": 4.0, "MaxZPos": 0.0 },
+
+      { "MinXPos": -4.0, "MinYPos": 0.0, "MinZPos": -4.0,
+        "MaxXPos": -2.0, "MaxYPos": 2.0, "MaxZPos": -2.0 },
+
+      { "MinXPos": -4.0, "MinYPos": 4.0, "MinZPos": 4.0,
+         "MaxXPos": -2.0, "MaxYPos": 6.0, "MaxZPos": 6.0 },
+
+      { "MinXPos": -4.0, "MinYPos": 2.0, "MinZPos": 6.0,
+         "MaxXPos": -2.0, "MaxYPos": 4.0, "MaxZPos": 8.0 },
+
+      { "MinXPos": -4.0, "MinYPos": 0.0, "MinZPos": 8.0,
+         "MaxXPos": -2.0, "MaxYPos": 2.0, "MaxZPos": 10.0 }
+     ]
+  }
+}
+
