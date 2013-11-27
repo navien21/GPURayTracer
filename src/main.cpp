@@ -46,9 +46,9 @@ int main(int argc, char ** argv)
 #else
 	if (argc<2)
 	{
-		std::cout<<"Usage: "<<argv[0]<<" json_file img_file"<<std::endl;
-		std::cout<<"Where json_file is the path to the input json parameter file that describing the scene (required)"<<std::endl;
-		std::cout<<"And img_file is the path to save the rendered png file (optional)"<<std::endl;
+		std::cout<<"Usage: "<<argv[0]<<" json_file"<<std::endl;
+		std::cout<<"Where json_file is json parameter file that describing the scene (required)"<<std::endl;
+	
 	}
 	else 
 	{
@@ -58,7 +58,7 @@ int main(int argc, char ** argv)
 	{
 		img_file = argv[2];
 	}
-	std::cout<<"Got command line arguments json_file = "<<json_file<<", img_file = "<<img_file<<std::endl;
+	std::cout<<"Got command line arguments json_file = "<<json_file<<std::endl;
 #endif
 
     // Create a model

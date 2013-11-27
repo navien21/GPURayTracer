@@ -405,7 +405,10 @@ void Tutorial::createGeometry()
 namespace grt {
 void OptiXRenderView::setUpAndDisplayImageWithOptiX(const Model &model)
 {
+	std::cout<<"Notes for image usage. Includes keystrokes and possible command line arguments"<<std::endl;
+	GLUTDisplay::printUsage();
 	GLUTDisplay::init( argc,  argv);
+	
 
   unsigned int width = 1080u, height = 720u;
 
