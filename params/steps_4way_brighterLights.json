@@ -1,0 +1,69 @@
+{
+  "image":
+  {
+
+     "title": "4 Way Cube Steps with 4 Lights",
+     "useDefaultLights": false,
+     "useDefaultLights": false,
+     "totalBrightness": 1.0,
+     "lights":
+     [
+
+       { "xPos": 20.0, "yPos": 60.0, "zPos": 20.0,
+         "r": 1.0, "g": 1.0, "b": 1.0},
+
+       { "xPos": -20.0, "yPos": 60.0, "zPos": -20.0,
+         "r": 0.0, "g": 3.0, "b": 0.0},
+
+       { "xPos": -20.0, "yPos": 60.0, "zPos": 20.0,
+         "r": 0.0, "g": 0.0, "b": 3.0},
+
+       { "xPos": 20.0, "yPos": 60.0, "zPos": -20.0,
+         "r": 3.0, "g": 0.0, "b": 0.0}
+     ],
+ 
+     "useDefaultBox": false,
+     "boxes":
+     [
+       { "MinXPos": -4.0, "MinYPos": 6.0, "MinZPos": 4.0,
+         "MaxXPos": -2.0, "MaxYPos": 8.0, "MaxZPos": 2.0 },
+
+      { "MinXPos": -4.0, "MinYPos": 4.0, "MinZPos": 0.0,
+         "MaxXPos": -2.0, "MaxYPos": 6.0, "MaxZPos": 2.0 },
+
+      { "MinXPos": -4.0, "MinYPos": 2.0, "MinZPos": -2.0,
+         "MaxXPos": -2.0, "MaxYPos": 4.0, "MaxZPos": 0.0 },
+
+      { "MinXPos": -4.0, "MinYPos": 0.0, "MinZPos": -4.0,
+        "MaxXPos": -2.0, "MaxYPos": 2.0, "MaxZPos": -2.0 },
+
+      { "MinXPos": -4.0, "MinYPos": 4.0, "MinZPos": 4.0,
+         "MaxXPos": -2.0, "MaxYPos": 6.0, "MaxZPos": 6.0 },
+
+      { "MinXPos": -4.0, "MinYPos": 2.0, "MinZPos": 6.0,
+         "MaxXPos": -2.0, "MaxYPos": 4.0, "MaxZPos": 8.0 },
+
+      { "MinXPos": -4.0, "MinYPos": 0.0, "MinZPos": 8.0,
+         "MaxXPos": -2.0, "MaxYPos": 2.0, "MaxZPos": 10.0 },
+
+      { "MinXPos": -2.0, "MinYPos": 4.0, "MinZPos": 4.0,
+         "MaxXPos": 0.0, "MaxYPos": 6.0, "MaxZPos": 2.0 },
+
+      { "MinXPos": 0.0, "MinYPos": 2.0, "MinZPos": 4.0,
+         "MaxXPos": 2.0, "MaxYPos": 4.0, "MaxZPos": 2.0 },
+
+      { "MinXPos": 2.0, "MinYPos": 0.0, "MinZPos": 4.0,
+        "MaxXPos": 4.0, "MaxYPos": 2.0, "MaxZPos": 2.0 },
+
+      { "MinXPos": -6.0, "MinYPos": 4.0, "MinZPos": 4.0,
+         "MaxXPos": -4.0, "MaxYPos": 6.0, "MaxZPos": 2.0 },
+
+      { "MinXPos": -8.0, "MinYPos": 2.0, "MinZPos": 4.0,
+         "MaxXPos": -6.0, "MaxYPos": 4.0, "MaxZPos": 2.0 },
+
+      { "MinXPos": -10.0, "MinYPos": 0.0, "MinZPos": 4.0,
+         "MaxXPos": -8.0, "MaxYPos": 2.0, "MaxZPos": 2.0 }
+     ]
+  }
+}
+
