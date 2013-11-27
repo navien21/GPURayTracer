@@ -1,0 +1,16 @@
+{
+  "image":
+  {
+
+     "title": "Far Post at Floor Corner",
+     "useDefaultLights": true,
+   
+     "useDefaultBox": false,
+     "boxes":
+     [
+       { "MinXPos": -64.0, "MinYPos": 0.0, "MinZPos": 63.0,
+         "MaxXPos": -63.0, "MaxYPos": 10.0, "MaxZPos": 64.0 }
+     ]
+  }
+}
+
