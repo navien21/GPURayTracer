@@ -1,7 +1,7 @@
 {
   "image":
   {
-     "title": "fr2: Default Box 2 Lights",
+     "title": "fr2: Default Box 2 Lights, Same as All Defaults",
      "useDefaultLights": false,
      "totalBrightness": 1.0,
      "lights":
@@ -12,6 +12,11 @@
 
        { "xPos":-20.0, "yPos": 60.0, "zPos": 16.0,
          "r": 1.0, "g": 1.0, "b": 1.0}
+     ],
+     "boxes":
+     [ 
+       { "MinXPos": -2.0, "MinYPos": 0.0, "MinZPos": -2.0,
+         "MaxXPos": 2.0, "MaxYPos": 7.0, "MaxZPos": 2.0 }
      ]
   }
 }
