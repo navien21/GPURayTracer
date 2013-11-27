@@ -54,10 +54,11 @@ int main(int argc, char ** argv)
 	{
 		json_file = argv[1];
 	}
+	/*
 	if (argc>2)
 	{
 		img_file = argv[2];
-	}
+	} */
 	std::cout<<"Got command line arguments json_file = "<<json_file<<std::endl;
 #endif
 
