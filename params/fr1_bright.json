@@ -1,6 +1,7 @@
 {
   "image":
   {
+     "title": "fr1_bright: Default Box twice bright",
      "useDefaultLights": false,
      "totalBrightness": 2.0,
      "lights":

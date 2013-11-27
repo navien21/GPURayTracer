@@ -1,6 +1,7 @@
 {
   "image":
   {
+     "title": "fr1.json: Default Box like OptiX SDK Tutorial 3",
      "useDefaultLights": false,
      "lights":
      [

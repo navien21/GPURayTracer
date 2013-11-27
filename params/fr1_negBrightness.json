@@ -1,6 +1,7 @@
 {
   "image":
   {
+     "title": "fr1 negative brightness: Default Box Negative brightness",
      "useDefaultLights": false,
      "totalBrightness": -1.0,
      "lights":

@@ -1,6 +1,7 @@
 {
   "image":
   {
+     "tutorial": "Default Box, 2 Lights Alternate Colors",
      "useDefaultLights": false,
      "lights":
      [

@@ -1,6 +1,7 @@
 {
   "image":
   {
+     "fr4: Default Box with 3 Lights",
      "useDefaultLights": false,
      "totalBrighness": 1.0,
      "lights":
