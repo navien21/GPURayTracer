@@ -1,0 +1,14 @@
+{
+  "image":
+  {
+
+     "title": "No Boxes",
+     "useDefaultLights": true,
+ 
+     "useDefaultBox": false,
+     "boxes":
+    [
+    ]
+  }
+}
+
