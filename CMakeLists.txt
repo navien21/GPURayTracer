@@ -75,7 +75,7 @@
 
 # This sets up the name of our project.  For our purposes the main thing this controls is
 # the name of the VS solution file.
-project(OptiX-Samples)
+project(GPURayTracer)
 
 # This enforces a particular version of CMake that we require to process the script files
 # properly.
@@ -178,9 +178,13 @@ endif()
 
 # Locate the NVRT distribution.  Search the SDK first, then look in the system.
 if ( APPLE )
+  
   set(OptiX_INSTALL_DIR "/usr/local/optix" CACHE PATH "Path to OptiX installed location.")
+
 else ( APPLE )
+
   set(OptiX_INSTALL_DIR "C:/Program Files/NVIDIA Corporation/OptiX SDK 3.0.1" CACHE PATH "Path to OptiX installed location.")
+
 endif( APPLE )
 
 # Search for the OptiX libraries and include files.
@@ -230,7 +234,7 @@ set(SAMPLES_CUDA_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lib/cuda)
 # Convience function for adding samples to the code.  You can copy the contents of this
 # funtion into your individual project if you wish to customize the behavior.  Note that
 # in CMake, functions have their own scope, whereas macros use the scope of the caller.
-function(OPTIX_add_sample_executable target_name)
+function(OPTIX_library target_name)
 
   # These calls will group PTX and CUDA files into their own directories in the Visual
   # Studio projects.
@@ -251,7 +255,7 @@ function(OPTIX_add_sample_executable target_name)
   # Here is where we create the rule to make the executable.  We define a target name and
   # list all the source files used to create the target.  In addition we also pass along
   # the cmake_options parsed out of the arguments.
-  add_executable(${target_name}
+  add_library(${target_name} STATIC
     ${source_files}
     ${generated_files}
     ${cmake_options}
@@ -270,29 +274,35 @@ endfunction()
   add_definitions(-DGLUT_FOUND -DGLUT_NO_LIB_PRAGMA)
 
   # See top level CMakeLists.txt file for documentation of OPTIX_add_sample_executable.
-  OPTIX_add_sample_executable( gpuRayTracer
+  OPTIX_library( gpuRayTracer
 
-    src/main.cpp
- 
-   
     CUDA/tutorial3.cu
-
     # These files are common among multiple samples
     CUDA/box.cu
     CUDA/parallelogram.cu
 
-    inc/RayTraceImageData.h
+    inc/Controller.hpp
+    inc/GPUManager.hpp
+    inc/ImageSaverView.hpp
     inc/jsonParameterReader.h
+    inc/Model.hpp
+    inc/OptiXRenderView.hpp
+    inc/ParseJSONController.hpp
+    inc/RayTraceImageData.h
+
+    src/GPUManager.cpp
     src/jsonParameterReader.cpp
     src/OptiXRenderView.cpp
 
-    inc/GPUManager.hpp
-    inc/OptiXRenderView.hpp
-    inc/Tutorial.h
-    inc/TutorialClass.hpp
 
-    )
+)
 
+
+#Set up GPURayTracer_main project to contain just the main method
+add_executable(gpuRayTracer_main src/main.cpp)
+
+#Allow it to link to the libarary and all optix stuff
+target_link_libraries(gpuRayTracer_main gpuRayTracer sutil optix ${optix_rpath})
 
 
 # Our sutil library.  The rules to build it are found in the subdirectory.
@@ -332,4 +342,28 @@ endif(WIN32)
 # We use this variable to set certain defaults only on the first pass, so that we don't
 # continually set them over and over again.
 set(PASSED_FIRST_CONFIGURE ON CACHE INTERNAL "Already Configured once?")
+
+
+
+#if(buildTest)
+
+# will add gtest project and gtest_SOURCE_DIR
+add_subdirectory(lib/gtest-1.7.0)
+
+enable_testing()
+
+include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
+
+add_executable(runUnitTests test/test_suite.cpp test/jsonParameterReaderTest.cpp)
+
+target_link_libraries(runUnitTests gtest gtest_main)
+
+target_link_libraries(runUnitTests gpuRayTracer)
+
+add_test(NAME runUnitTests
+         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+         COMMAND runUnitTests)
+
+
+#endif()
 
