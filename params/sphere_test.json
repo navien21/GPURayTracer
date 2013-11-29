@@ -1,0 +1,19 @@
+{
+  "image":
+  {
+    "title": "Sphere Test",
+    "useDefaultLights": true,
+    "useDefaultBox": false,
+    "boxes" : [ ],
+    "spheres" :
+    [
+      {
+        "CenterXPos" : -10.0,
+        "CenterYPos" : 5.0,
+        "CenterZPos" : 0.0,
+        "radius" : 2.0
+      }
+    ]
+  }
+}
+

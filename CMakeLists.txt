@@ -279,6 +279,7 @@ endfunction()
     CUDA/tutorial3.cu
     # These files are common among multiple samples
     CUDA/box.cu
+    CUDA/sphere.cu
     CUDA/parallelogram.cu
 
     inc/Controller.hpp
