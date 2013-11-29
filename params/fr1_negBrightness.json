@@ -3,10 +3,11 @@
   {
      "title": "fr1 negative brightness: Default Box Negative brightness",
      "useDefaultLights": false,
+     "useDefaultBox": true,
      "totalBrightness": -1.0,
      "lights":
      [
-       { "xPos": -5.0, "yPos": 60.0, "zPos": -16.0, 
+       { "xPos": -5.0, "yPos": 60.0, "zPos": -16.0,
          "r": 1.0, "g": 1.0, "b": 1.0}
      ]
   }

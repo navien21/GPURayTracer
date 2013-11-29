@@ -3,6 +3,7 @@
   {
      "title": "fr3: Default Box with 2 Lights one red, one blue",
      "useDefaultLights": false,
+     "useDefaultBox": true,
      "totalBrightness": 1.0,
      "lights":
      [

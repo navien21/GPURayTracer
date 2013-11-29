@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <set>
 /* This file includes the main function */

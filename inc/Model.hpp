@@ -15,11 +15,92 @@
 
 #pragma once
 
-#include "RayTraceImageData.h"
 #include <set>
-
+#include <vector>
+#include <ostream>
 
 namespace grt {
+
+	class Position
+	{
+		public:
+			float x;
+			float y;
+			float z;
+
+			friend std::ostream & operator<<(std::ostream & _out, const Position & pos)
+			{
+				_out << "position: x= "  << pos.x << ", y= " << pos.y << ", z= " << pos.z;
+				return _out;
+			}
+	};
+
+	class Color
+	{
+		public:
+			float r;
+			float g;
+			float b;
+
+			friend std::ostream & operator<<(std::ostream & _out, const Color & c)
+			{
+				_out << "color: r=" << c.r << ", g=" << c.g << ", b= " << c.b;
+				return _out;
+			}
+	};
+
+	class Light
+	{
+		public:
+			Position position; // x, y, z position
+			Color color; // R G B color
+
+			friend std::ostream & operator<<(std::ostream & _out, const Light & light)
+			{
+				_out << "Light: " << light.position << " " << light.color;
+				return _out;
+			}
+	};
+
+	class Camera
+	{
+		public:
+			Position position;
+			float fieldOfView;
+	};
+
+	// May become a shape
+	class Box
+	{
+		public:
+			Position minPosition;
+			Position maxPosition;
+			friend std::ostream & operator<<(std::ostream & _out, const Box & box)
+			{
+				_out << "minPosition= " << box.minPosition << ", maxPosition= "<<box.maxPosition;
+				return _out;
+			}
+	};
+
+	// May become a shape
+	class Sphere
+	{
+		public:
+			Position position;
+			float radius;
+			friend std::ostream & operator<<(std::ostream & _out, const Sphere & sphere)
+			{
+				_out << "position= " << sphere.position << ", radius= " << sphere.radius;
+				return _out;
+			}
+	};
+
+	// May become a shape
+	class Parallelogram
+	{
+		public:
+			// how specify? vec1, vec2, anchor, Material?
+	};
 
 	class Model;
 
@@ -32,7 +113,31 @@ namespace grt {
 		std::set<IModelObserver*> observers;
 
 		public:
-			RayTraceImageData image;
+			std::string imageTitle;
+
+			float totalBrightness;
+
+			// Lights
+			std::vector< Light > lights;
+
+			// Boxes
+			std::vector< Box > boxes;
+
+			// Spheres
+			std::vector< Sphere > spheres;
+
+			/* Rest is not yet ready
+			// Camera information
+			Camera camera;
+
+			// Parallelogram shapes (includes floor)
+			std::vector< Parallelogram > parallelogram;
+			*/
+
+			// Constructor
+			Model()
+				: imageTitle("GPURayTracer")
+			{ }
 
 			void registerObserver(IModelObserver * _obs) {
 				observers.insert(_obs);
@@ -43,11 +148,22 @@ namespace grt {
 			}
 
 			void notifyObservers() {
-				std::cout<<"Inside a Model class notifyObservers function"<<std::endl;
 				for (std::set<IModelObserver*>::iterator ob_it = observers.begin(); ob_it != observers.end(); ++ob_it) {
-					std::cout<<"Notifing an observer!"<<std::endl;
 					(*ob_it)->modelUpdated(*this);
 				}
+			}
+
+			friend std::ostream & operator<<(std::ostream & _out, const Model & model)
+			{
+				_out << "imageTitle = " << model.imageTitle << std::endl;
+				_out << "totalBrightness = " << model.totalBrightness << std::endl;
+				for (int i=0; i<(int)model.lights.size(); ++i)
+					_out << "Light: " << (i+1) << " - " << model.lights[i] << std::endl;
+				for (int i=0; i<(int)model.boxes.size(); ++i)
+					_out << "Box: " << (i+1) << " - " << model.boxes[i] << std::endl;
+				for (int i=0; i<(int)model.spheres.size(); ++i)
+					_out << "Sphere:" << (i+1) << " - " << model.spheres[i] << std::endl;
+				return _out;
 			}
 	};
 

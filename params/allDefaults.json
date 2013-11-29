@@ -1,7 +1,9 @@
 {
   "image":
   {
-
+    "useDefaultLighting" : true,
+    "useDefaultBox" : true,
+    "useDefaultSphere" : true
   }
 }
 

@@ -285,14 +285,12 @@ endfunction()
     inc/Controller.hpp
     inc/GPUManager.hpp
     inc/ImageSaverView.hpp
-    inc/jsonParameterReader.h
     inc/Model.hpp
     inc/OptiXRenderView.hpp
     inc/ParseJSONController.hpp
-    inc/RayTraceImageData.h
 
     src/GPUManager.cpp
-    src/jsonParameterReader.cpp
+    src/ParseJSONController.cpp
     src/OptiXRenderView.cpp
 
 

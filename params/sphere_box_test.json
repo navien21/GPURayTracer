@@ -1,7 +1,7 @@
 {
   "image":
   {
-    "title": "Sphere Test",
+    "title": "Sphere & Box Test",
     "useDefaultLights": true,
     "useDefaultBox": false,
     "boxes" :

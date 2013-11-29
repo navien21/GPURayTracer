@@ -1,9 +1,9 @@
 {
   "image":
   {
-     "title": "fr4: Default Box with 3 Lights",
+     "title": "fr5: Default Sphere with 3 Lights",
      "useDefaultLights": false,
-     "useDefaultBox": true,
+     "useDefaultSphere": true,
      "totalBrighness": 1.0,
      "lights":
      [

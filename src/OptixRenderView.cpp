@@ -16,9 +16,6 @@
 
 #include <vector>
 
-#include "RayTraceImageData.h"
-#include "jsonParameterReader.h"
-
 #include <TutorialClass.hpp>
 
 using namespace optix;
@@ -57,12 +54,10 @@ void normalizeLight(BasicLight lights[], int n, float brightness=1){
 
 void Tutorial::initScene( InitialCameraData& camera_data )
 {
-	// set up path to ptx file associated with tutorial number
-	std::stringstream ss;
-	ss << "tutorial" << m_tutnum << ".cu";
-	m_ptx_path = ptxpath( "gpuRayTracer", ss.str() );
+	// set up path to ptx file
+	m_ptx_path = ptxpath( "gpuRayTracer", "tutorial3.cu" );
 
-	// context 
+	// context
 	m_context->setRayTypeCount( 2 );
 	m_context->setEntryPointCount( 1 );
 	m_context->setStackSize( 4640 );
@@ -78,12 +73,7 @@ void Tutorial::initScene( InitialCameraData& camera_data )
 	m_context["output_buffer"]->set( createOutputBuffer(RT_FORMAT_UNSIGNED_BYTE4, m_width, m_height) );
 
 	// Ray gen program
-	std::string camera_name;
-	if(m_tutnum >= 11){
-		camera_name = "env_camera";
-	} else {
-		camera_name = "pinhole_camera";
-	}
+	std::string camera_name = "pinhole_camera";
 	Program ray_gen_program = m_context->createProgramFromPTXFile( m_ptx_path, camera_name );
 	m_context->setRayGenerationProgram( 0, ray_gen_program );
 
@@ -92,79 +82,36 @@ void Tutorial::initScene( InitialCameraData& camera_data )
 	m_context->setExceptionProgram( 0, exception_program );
 	m_context["bad_color"]->setFloat( 0.0f, 1.0f, 0.0f );
 
-	std::string miss_name;
-	if(m_tutnum >= 5)
-		miss_name = "envmap_miss";
-	else
-		miss_name = "miss";
+	std::string miss_name = "miss";
 	m_context->setMissProgram( 0, m_context->createProgramFromPTXFile( m_ptx_path, miss_name ) );
 	const float3 default_color = make_float3(1.0f, 1.0f, 1.0f);
 	//m_context["envmap"]->setTextureSampler( loadTexture( m_context, texpath("CedarCity.hdr"), default_color) );
 	m_context["bg_color"]->setFloat( make_float3( 0.34f, 0.55f, 0.85f ) );
 
-	// Lights
-	// Lights
-	//BasicLight lights[1] = { 
-	//  { make_float3( -25.0f, 60.0f, -16.0f ), make_float3( 1.0f, 1.0f, 1.0f ), 1 }
-	//};
-
-
 	std::vector<BasicLight> lights;
-	float brightness = 1; // brightness... default is 1, but should be modifiable in JSON
-	int n;
 
-	if(!imageData.useDefaultLighting) {
-		std::vector<Light> json_lights = imageData.lighting.lights;
-		n=json_lights.size(); //number of light sources... comes from JSON
-		brightness = imageData.lighting.totalBrightness; 
+	std::vector<grt::Light> & json_lights = model.lights;
+	int n = json_lights.size(); //number of light sources... comes from JSON
+	float brightness = model.totalBrightness;
 
-		// temporary float arrays... these should be their own struct or class so they can be
-		// looped through to generate light sources.. or just directly parsed into BasicLight form
-		lights.resize(n);
-		for(int i = 0; i < n; i++) {
-			Light currentLight = json_lights[i];
-			float lightposition[3] = {currentLight.position.x, currentLight.position.y, currentLight.position.z};
-			float lightcolor[3] = {currentLight.color.r, currentLight.color.g, currentLight.color.b};
-			lights[i] = generateLight(lightposition, lightcolor);
-
-		}
-
-	} else {
-
-		n=2; //number of light sources... comes from JSON
-		lights.resize(n);
-
-
-		// temporary float arrays... these should be their own struct or class so they can be
-		// looped through to generate light sources.. or just directly parsed into BasicLight form
-		float light1pos[3] = {-25.0,60.0,-16.0};
-		float light1color[3] = {1,1,1};
-
-		float light2pos[3] = {-20.0,60.0, 16.0};
-		float light2color[3] = {1,1,1};
-
-
-		//BasicLight lights[2];
-
-
-		//lights = new BasicLight[n];
-		lights[0] = generateLight(light1pos,light1color);
-		lights[1] = generateLight(light2pos,light2color);
+	// temporary float arrays... these should be their own struct or class so they can be
+	// looped through to generate light sources.. or just directly parsed into BasicLight form
+	lights.resize(n);
+	for(int i = 0; i < n; i++) {
+		grt::Light currentLight = json_lights[i];
+		float lightposition[3] = {currentLight.position.x, currentLight.position.y, currentLight.position.z};
+		float lightcolor[3] = {currentLight.color.r, currentLight.color.g, currentLight.color.b};
+		lights[i] = generateLight(lightposition, lightcolor);
 	}
 
 	normalizeLight(lights.data(), n, brightness); // corrects for brightness
-
-	//lights[0].pos = make_float3( -25.0f, 60.0f, -16.0f );
-	//lights[0].color = make_float3( 0.4f, 0.7f, 0.4f );
-
-
 
 	Buffer light_buffer = m_context->createBuffer(RT_BUFFER_INPUT);
 	light_buffer->setFormat(RT_FORMAT_USER);
 	light_buffer->setElementSize(sizeof(BasicLight));
 	light_buffer->setSize(lights.size());
 	memcpy(light_buffer->map(), lights.data(), sizeof(lights[0])*lights.size());
-	light_buffer->unmap(); 
+	light_buffer->unmap();
 
 	m_context["lights"]->set(light_buffer);
 
@@ -193,8 +140,7 @@ void Tutorial::initScene( InitialCameraData& camera_data )
 		// One channel 3D noise in [0.0, 1.0] range.
 		*tex_data++ = rand_range(0.0f, 1.0f);
 	}
-	noiseBuffer->unmap(); 
-
+	noiseBuffer->unmap();
 
 	// Noise texture sampler
 	TextureSampler noiseSampler = m_context->createTextureSampler();
@@ -261,40 +207,25 @@ float4 make_plane( float3 n, float3 p )
 
 void Tutorial::createGeometry()
 {
-	std::string box_ptx( ptxpath( "gpuRayTracer", "box.cu" ) ); 
+	std::string box_ptx( ptxpath( "gpuRayTracer", "box.cu" ) );
 	Program box_bounds = m_context->createProgramFromPTXFile( box_ptx, "box_bounds" );
 	Program box_intersect = m_context->createProgramFromPTXFile( box_ptx, "box_intersect" );
 
-	std::cout << "Inside createGeometry" << std::endl;
-
 	// Create boxes
 	std::vector< Geometry > boxes;
-	if (imageData.useDefaultBox)
+	for (int iBox=0; iBox<(int)model.boxes.size(); ++iBox)
 	{
 		Geometry box = m_context->createGeometry();
 		box->setPrimitiveCount( 1u );
 		box->setBoundingBoxProgram( box_bounds );
 		box->setIntersectionProgram( box_intersect );
-		box["boxmin"]->setFloat( -2.0f, 0.0f, -2.0f );
-		box["boxmax"]->setFloat(  2.0f, 7.0f,  2.0f );
+		box["boxmin"]->setFloat( model.boxes[iBox].minPosition.x,
+				model.boxes[iBox].minPosition.y,
+				model.boxes[iBox].minPosition.z);
+		box["boxmax"]->setFloat( model.boxes[iBox].maxPosition.x,
+				model.boxes[iBox].maxPosition.y,
+				model.boxes[iBox].maxPosition.z);
 		boxes.push_back(box);
-	}
-	else
-	{
-		for (int iBox=0; iBox<(int)imageData.boxes.size(); ++iBox)
-		{
-			Geometry box = m_context->createGeometry();
-			box->setPrimitiveCount( 1u );
-			box->setBoundingBoxProgram( box_bounds );
-			box->setIntersectionProgram( box_intersect );
-			box["boxmin"]->setFloat( imageData.boxes[iBox].minPosition.x,
-					imageData.boxes[iBox].minPosition.y,
-					imageData.boxes[iBox].minPosition.z);
-			box["boxmax"]->setFloat( imageData.boxes[iBox].maxPosition.x,
-					imageData.boxes[iBox].maxPosition.y,
-					imageData.boxes[iBox].maxPosition.z);
-			boxes.push_back(box);
-		}
 	}
 
 	std::string sphere_ptx( ptxpath( "gpuRayTracer", "sphere.cu" ) );
@@ -303,19 +234,18 @@ void Tutorial::createGeometry()
 
 	// Create Spheres
 	std::vector< Geometry > spheres;
-	for (int iSphere=0; iSphere<(int)imageData.spheres.size(); ++iSphere)
+	for (int iSphere=0; iSphere<(int)model.spheres.size(); ++iSphere)
 	{
 		Geometry sphere = m_context->createGeometry();
 		sphere->setPrimitiveCount( 1u );
 		sphere->setBoundingBoxProgram( sphere_bounds );
 		sphere->setIntersectionProgram( sphere_intersect );
-		sphere["sphere"]->setFloat( imageData.spheres[iSphere].position.x
-								  , imageData.spheres[iSphere].position.y
-								  , imageData.spheres[iSphere].position.z
-								  , imageData.spheres[iSphere].radius
-								  );
+		sphere["sphere"]->setFloat( model.spheres[iSphere].position.x
+				, model.spheres[iSphere].position.y
+				, model.spheres[iSphere].position.z
+				, model.spheres[iSphere].radius
+				);
 		spheres.push_back(sphere);
-		std::cout << "Sphere Geometry created" << std::endl;
 	}
 
 	// Floor geometry
@@ -339,44 +269,13 @@ void Tutorial::createGeometry()
 	parallelogram["anchor"]->setFloat( anchor );
 
 	// Materials
-	std::string box_chname;
-	//if(m_tutnum >= 8){
-	//  box_chname = "box_closest_hit_radiance";
-	//} else if(m_tutnum >= 3){
-	box_chname = "closest_hit_radiance3";
-	//} else if(m_tutnum >= 2){
-	//  box_chname = "closest_hit_radiance2";
-	//} else if(m_tutnum >= 1){
-	//  box_chname = "closest_hit_radiance1";
-	//} else {
-	//  box_chname = "closest_hit_radiance0";
-	//}
-
-
-	std::string floor_chname;
-	//if(m_tutnum >= 7){
-	//  floor_chname = "floor_closest_hit_radiance";
-	//} else if(m_tutnum >= 6){
-	//  floor_chname = "floor_closest_hit_radiance5";
-	//} else if(m_tutnum >= 4){
-	//  floor_chname = "floor_closest_hit_radiance4";
-	//} else if(m_tutnum >= 3){
-	floor_chname = "closest_hit_radiance3";
-	//} else if(m_tutnum >= 2){
-	//  floor_chname = "closest_hit_radiance2";
-	//} else if(m_tutnum >= 1){
-	//  floor_chname = "closest_hit_radiance1";
-	//} else {
-	//  floor_chname = "closest_hit_radiance0";
-	//}
-	//  
+	std::string box_chname = "closest_hit_radiance3";
+	std::string floor_chname = "closest_hit_radiance3";
 	Material floor_matl = m_context->createMaterial();
 	Program floor_ch = m_context->createProgramFromPTXFile( m_ptx_path, floor_chname );
 	floor_matl->setClosestHitProgram( 0, floor_ch );
-	if(m_tutnum >= 3) {
-		Program floor_ah = m_context->createProgramFromPTXFile( m_ptx_path, "any_hit_shadow" );
-		floor_matl->setAnyHitProgram( 1, floor_ah );
-	}
+	Program floor_ah = m_context->createProgramFromPTXFile( m_ptx_path, "any_hit_shadow" );
+	floor_matl->setAnyHitProgram( 1, floor_ah );
 	floor_matl["Ka"]->setFloat( 0.3f, 0.3f, 0.1f );
 	floor_matl["Kd"]->setFloat( 194/255.f*.6f, 186/255.f*.6f, 151/255.f*.6f );
 	floor_matl["Ks"]->setFloat( 0.4f, 0.4f, 0.4f );
@@ -395,10 +294,8 @@ void Tutorial::createGeometry()
 		Material box_matl = m_context->createMaterial();
 		Program box_ch = m_context->createProgramFromPTXFile( m_ptx_path, box_chname );
 		box_matl->setClosestHitProgram( 0, box_ch );
-		if(m_tutnum >= 3) {
-			Program box_ah = m_context->createProgramFromPTXFile( m_ptx_path, "any_hit_shadow" );
-			box_matl->setAnyHitProgram( 1, box_ah );
-		}
+		Program box_ah = m_context->createProgramFromPTXFile( m_ptx_path, "any_hit_shadow" );
+		box_matl->setAnyHitProgram( 1, box_ah );
 		box_matl["Ka"]->setFloat( 0.3f, 0.3f, 0.3f );
 		box_matl["Kd"]->setFloat( 0.6f, 0.7f, 0.8f );
 		box_matl["Ks"]->setFloat( 0.8f, 0.9f, 0.8f );
@@ -420,7 +317,6 @@ void Tutorial::createGeometry()
 		sphere_matl["phong_exp"]->setFloat( 64 );
 		sphere_matl["reflectivity_n"]->setFloat( 0.5f, 0.5f, 0.5f );
 
-		std::cout << " Adding Sphere" << std::endl;
 		gis.push_back( m_context->createGeometryInstance( spheres[iSphere], &sphere_matl, &sphere_matl+1 ) );
 	}
 	gis.push_back( m_context->createGeometryInstance( parallelogram, &floor_matl, &floor_matl+1 ) );
@@ -430,7 +326,6 @@ void Tutorial::createGeometry()
 	geometrygroup->setChildCount( static_cast<unsigned int>(gis.size()) );
 	for (int i=0; i<(int)gis.size();++i)
 		geometrygroup->setChild( i, gis[i] );
-	// geometrygroup->setChild( 1, gis[1] );
 
 	geometrygroup->setAcceleration( m_context->createAcceleration("NoAccel","NoAccel") );
 
@@ -439,58 +334,26 @@ void Tutorial::createGeometry()
 }
 
 
-
-
 namespace grt {
-	void OptiXRenderView::setUpAndDisplayImageWithOptiX(const Model &model)
-	{
-		std::cout<<"Notes for image usage. Includes keystrokes and possible command line arguments"<<std::endl;
+
+	OptiXRenderView::OptiXRenderView(int argc, char ** argv) {
+		std::cout<<"Notes for GLUT usage. Includes keystrokes and possible command line arguments"<<std::endl;
 		GLUTDisplay::printUsage();
 		GLUTDisplay::init( argc,  argv);
+	}
 
+	void OptiXRenderView::modelUpdated(const Model &model)
+	{
+		std::cout << "[INFO] - Model update received by optixRenderView object."<<std::endl;
 
-		unsigned int width = 1080u, height = 720u;
-
-		std::string texture_path;
-		int tutnum = 3;
-
-		std::stringstream title;
-		title << model.image.imageTitle;
 		try {
-			Tutorial scene(tutnum, texture_path, model.image);
-			scene.setDimensions( width, height );
-			GLUTDisplay::run( title.str(), &scene );
+			Tutorial scene(model);
+			GLUTDisplay::run( model.imageTitle, &scene );
 		} catch( Exception& e ){
 			sutilReportError( e.getErrorString().c_str() );
 			exit(1);
 		}
-		return;
 	}
-
 
 }; // grt namespace
 
-
-
-/*
- * Example json file contents with 2 lights:
- * 
- {
- "image":
- {
- "useDefaultLights": false,
- "totalBrightness": 1,
- "lights":
- [
-
- { "xPos": 5, "yPos": 10, "zPos": 15, 
- "r": 255, "g": 255, "b": 255 },
-
- { "xPos":25, "yPos": 30, "zPos": 35,
- "r": 10, "g": 10, "b": 10 }
- ]
- }
- }
-
-
-*/

@@ -8,20 +8,20 @@
 
 namespace grt {
 
-    class Controller {
-        protected:
-            Model & model;
-        public:
-            Controller(Model & _model)
-            : model(_model)
-            {}
+	class Controller {
+		protected:
+			Model & model;
+		public:
+			Controller(Model & _model)
+				: model(_model)
+			{}
 
-            void execute() {}
+			void execute() {}
 
-            // NOT IMPLEMENTED YET
-            void revert() {}
-    };
+			// NOT IMPLEMENTED YET
+			void revert() {}
+	};
 
 
 };
-  
+
