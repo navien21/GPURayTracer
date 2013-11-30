@@ -184,7 +184,22 @@ namespace grt {
 			model.spheres.push_back(s);
 		}
 
-		if (model.boxes.empty() && model.spheres.empty()) {
+		if (!pt_chulls && pt.get("image.useDefaultChull",false)) {
+			std::cout << "[INFO] - Using Default Chull" << std::endl;
+			Chull c;
+			{
+				c.position.x = -1.4f;
+				c.position.y =  0.0f;
+				c.position.z = -3.7f;
+				c.radius = 1.0f;
+				c.min = 0.02f;
+				c.max = 3.5f;
+				c.nsides = 6u;
+			}
+			model.chulls.push_back(c);
+		}
+
+		if (model.boxes.empty() && model.spheres.empty() && model.chulls.empty()) {
 			std::cout << "[WARN] - No Shapes and defaults disabled!" << std::endl;
 		}
 
