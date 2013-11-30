@@ -84,6 +84,7 @@ namespace grt {
 				boxToAppend.maxPosition.x = v.second.get<float>("MaxXPos");
 				boxToAppend.maxPosition.y = v.second.get<float>("MaxYPos");
 				boxToAppend.maxPosition.z = v.second.get<float>("MaxZPos");
+				boxToAppend.material = v.second.get<std::string>("material","phong");
 				model.boxes.push_back(boxToAppend);
 			}
 		}

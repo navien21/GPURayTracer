@@ -75,9 +75,10 @@ namespace grt {
 		public:
 			Position minPosition;
 			Position maxPosition;
+			std::string material;
 			friend std::ostream & operator<<(std::ostream & _out, const Box & box)
 			{
-				_out << "minPosition= " << box.minPosition << ", maxPosition= "<<box.maxPosition;
+				_out << "minPosition= " << box.minPosition << ", maxPosition= "<<box.maxPosition << ", material= " << box.material;
 				return _out;
 			}
 	};
@@ -88,6 +89,7 @@ namespace grt {
 		public:
 			Position position;
 			float radius;
+			std::string material;
 			friend std::ostream & operator<<(std::ostream & _out, const Sphere & sphere)
 			{
 				_out << "position= " << sphere.position << ", radius= " << sphere.radius;

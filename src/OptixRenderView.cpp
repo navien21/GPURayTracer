@@ -269,7 +269,6 @@ void Tutorial::createGeometry()
 	parallelogram["anchor"]->setFloat( anchor );
 
 	// Materials
-	std::string box_chname = "closest_hit_radiance3";
 	std::string floor_chname = "closest_hit_radiance3";
 	Material floor_matl = m_context->createMaterial();
 	Program floor_ch = m_context->createProgramFromPTXFile( m_ptx_path, floor_chname );
@@ -287,37 +286,64 @@ void Tutorial::createGeometry()
 	//floor_matl["crack_color"]->setFloat( 0.1f, 0.1f, 0.1f );
 	//floor_matl["crack_width"]->setFloat( 0.02f );
 
+	// Phong material
+	std::string phong_chname = "closest_hit_radiance3";
+	Material phong_matl = m_context->createMaterial();
+	Program phong_ch = m_context->createProgramFromPTXFile( m_ptx_path, phong_chname );
+	phong_matl->setClosestHitProgram( 0, phong_ch );
+	Program phong_ah = m_context->createProgramFromPTXFile( m_ptx_path, "any_hit_shadow" );
+	phong_matl->setAnyHitProgram( 1, phong_ah );
+	phong_matl["Ka"]->setFloat( 0.3f, 0.3f, 0.3f );
+	phong_matl["Kd"]->setFloat( 0.6f, 0.7f, 0.8f );
+	phong_matl["Ks"]->setFloat( 0.8f, 0.9f, 0.8f );
+	phong_matl["phong_exp"]->setFloat( 88 );
+	phong_matl["reflectivity_n"]->setFloat( 0.2f, 0.2f, 0.2f );
+
+	// Glass material
+	Material glass_matl;
+	Program glass_ch = m_context->createProgramFromPTXFile( m_ptx_path, "glass_closest_hit_radiance" );
+	std::string glass_ahname = "glass_any_hit_shadow";
+	Program glass_ah = m_context->createProgramFromPTXFile( m_ptx_path, glass_ahname );
+	glass_matl = m_context->createMaterial();
+	glass_matl->setClosestHitProgram( 0, glass_ch );
+	glass_matl->setAnyHitProgram( 1, glass_ah );
+	glass_matl["importance_cutoff"]->setFloat( 1e-2f );
+	glass_matl["cutoff_color"]->setFloat( 0.34f, 0.55f, 0.85f );
+	glass_matl["fresnel_exponent"]->setFloat( 3.0f );
+	glass_matl["fresnel_minimum"]->setFloat( 0.1f );
+	glass_matl["fresnel_maximum"]->setFloat( 1.0f );
+	glass_matl["refraction_index"]->setFloat( 1.4f );
+	glass_matl["refraction_color"]->setFloat( 1.0f, 1.0f, 1.0f );
+	glass_matl["reflection_color"]->setFloat( 1.0f, 1.0f, 1.0f );
+	glass_matl["refraction_maxdepth"]->setInt( 100 );
+	glass_matl["reflection_maxdepth"]->setInt( 100 );
+	float3 extinction = make_float3(.80f, .89f, .75f);
+	glass_matl["extinction_constant"]->setFloat( log(extinction.x), log(extinction.y), log(extinction.z) );
+	glass_matl["shadow_attenuation"]->setFloat( 0.4f, 0.7f, 0.4f );
+
 	// Create GIs for each piece of geometry
 	std::vector<GeometryInstance> gis;
 	for (int iBox=0; iBox<(int)boxes.size();++iBox)
 	{
-		Material box_matl = m_context->createMaterial();
-		Program box_ch = m_context->createProgramFromPTXFile( m_ptx_path, box_chname );
-		box_matl->setClosestHitProgram( 0, box_ch );
-		Program box_ah = m_context->createProgramFromPTXFile( m_ptx_path, "any_hit_shadow" );
-		box_matl->setAnyHitProgram( 1, box_ah );
-		box_matl["Ka"]->setFloat( 0.3f, 0.3f, 0.3f );
-		box_matl["Kd"]->setFloat( 0.6f, 0.7f, 0.8f );
-		box_matl["Ks"]->setFloat( 0.8f, 0.9f, 0.8f );
-		box_matl["phong_exp"]->setFloat( 88 );
-		box_matl["reflectivity_n"]->setFloat( 0.2f, 0.2f, 0.2f );
-
-		gis.push_back( m_context->createGeometryInstance( boxes[iBox], &box_matl, &box_matl+1 ) );
+		std::cout << "Material = " << model.boxes[iBox].material << std::endl;
+		Material mat = ((model.boxes[iBox].material.compare("glass") == 0) ? glass_matl : phong_matl);
+		gis.push_back( m_context->createGeometryInstance( boxes[iBox], &mat, &mat+1 ) );
 	}
 	for (int iSphere=0; iSphere<(int)spheres.size();++iSphere)
 	{
-		Material sphere_matl = m_context->createMaterial();
-		Program sphere_ch = m_context->createProgramFromPTXFile( m_ptx_path, box_chname );
-		sphere_matl->setClosestHitProgram( 0, sphere_ch );
-		Program sphere_ah = m_context->createProgramFromPTXFile( m_ptx_path, "any_hit_shadow" );
-		sphere_matl->setAnyHitProgram( 1, sphere_ah );
-		sphere_matl["Ka"]->setFloat( 0.2f, 0.5f, 0.5f );
-		sphere_matl["Kd"]->setFloat( 0.2f, 0.7f, 0.8f );
-		sphere_matl["Ks"]->setFloat( 0.9f, 0.9f, 0.9f );
-		sphere_matl["phong_exp"]->setFloat( 64 );
-		sphere_matl["reflectivity_n"]->setFloat( 0.5f, 0.5f, 0.5f );
+	//	Material sphere_matl = m_context->createMaterial();
+	//	Program sphere_ch = m_context->createProgramFromPTXFile( m_ptx_path, box_chname );
+	//	sphere_matl->setClosestHitProgram( 0, sphere_ch );
+	//	Program sphere_ah = m_context->createProgramFromPTXFile( m_ptx_path, "any_hit_shadow" );
+	//	sphere_matl->setAnyHitProgram( 1, sphere_ah );
+	//	sphere_matl["Ka"]->setFloat( 0.2f, 0.5f, 0.5f );
+	//	sphere_matl["Kd"]->setFloat( 0.2f, 0.7f, 0.8f );
+	//	sphere_matl["Ks"]->setFloat( 0.9f, 0.9f, 0.9f );
+	//	sphere_matl["phong_exp"]->setFloat( 64 );
+	//	sphere_matl["reflectivity_n"]->setFloat( 0.5f, 0.5f, 0.5f );
 
-		gis.push_back( m_context->createGeometryInstance( spheres[iSphere], &sphere_matl, &sphere_matl+1 ) );
+		Material mat = ((model.spheres[iSphere].material.compare("glass") == 0) ? glass_matl : phong_matl);
+		gis.push_back( m_context->createGeometryInstance( spheres[iSphere], &mat, &mat+1 ) );
 	}
 	gis.push_back( m_context->createGeometryInstance( parallelogram, &floor_matl, &floor_matl+1 ) );
 
