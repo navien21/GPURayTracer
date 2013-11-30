@@ -1,0 +1,21 @@
+{
+  "image":
+  {
+    "title": "Chull Test",
+    "useDefaultLights": true,
+    "chulls" :
+    [
+      {
+        "CenterXPos" : -1.4,
+        "CenterYPos" :  0.0,
+        "CenterZPos" : -3.7,
+        "radius" : 2.0,
+        "min" : 0.02,
+        "max" : 3.5,
+        "nsides" : 8,
+        "material" : "glass"
+      }
+    ]
+  }
+}
+

@@ -92,7 +92,24 @@ namespace grt {
 			std::string material;
 			friend std::ostream & operator<<(std::ostream & _out, const Sphere & sphere)
 			{
-				_out << "position= " << sphere.position << ", radius= " << sphere.radius;
+				_out << "position= " << sphere.position << ", radius= " << sphere.radius << ", material= " << sphere.material << std::endl;
+				return _out;
+			}
+	};
+
+	// May become a shape
+	class Chull
+	{
+		public:
+			Position position;
+			float radius;
+			float min;
+			float max;
+			int nsides;
+			std::string material;
+			friend std::ostream & operator<<(std::ostream & _out, const Chull & chull)
+			{
+				_out << "position= " << chull.position << ", radius= " << chull.radius << ", material= " << chull.material << ", min = " << chull.min << ",max = " << chull.max << std::endl;
 				return _out;
 			}
 	};
@@ -127,6 +144,9 @@ namespace grt {
 
 			// Spheres
 			std::vector< Sphere > spheres;
+
+			// Chulls
+			std::vector< Chull > chulls;
 
 			/* Rest is not yet ready
 			// Camera information

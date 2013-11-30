@@ -102,7 +102,29 @@ namespace grt {
 				sphereToAppend.position.y = v.second.get<float>("CenterYPos");
 				sphereToAppend.position.z = v.second.get<float>("CenterZPos");
 				sphereToAppend.radius = v.second.get<float>("radius");
+				sphereToAppend.material = v.second.get<std::string>("material","phong");
 				model.spheres.push_back(sphereToAppend);
+			}
+		}
+
+		// Chulls
+		boost::optional<ptree&> pt_chulls = pt.get_child_optional("image.chulls");
+
+		if (pt_chulls) {
+			std::cout << "Loading chulls from json file" << std::endl;
+			// Now try to read in the chulls
+			BOOST_FOREACH( ptree::value_type &v, pt_chulls.get() )
+			{
+				Chull chullToAppend;
+				chullToAppend.position.x = v.second.get<float>("CenterXPos");
+				chullToAppend.position.y = v.second.get<float>("CenterYPos");
+				chullToAppend.position.z = v.second.get<float>("CenterZPos");
+				chullToAppend.radius = v.second.get<float>("radius");
+				chullToAppend.min = v.second.get<float>("min");
+				chullToAppend.max = v.second.get<float>("max");
+				chullToAppend.nsides = v.second.get<int>("nsides");
+				chullToAppend.material = v.second.get<std::string>("material","phong");
+				model.chulls.push_back(chullToAppend);
 			}
 		}
 

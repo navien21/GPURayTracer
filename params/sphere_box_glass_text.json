@@ -1,0 +1,37 @@
+{
+  "image":
+  {
+    "title": "Sphere & Box Test",
+    "useDefaultLights": true,
+    "useDefaultBox": false,
+    "boxes" :
+    [
+      {
+        "MinXPos" : -9.0,
+        "MinYPos" :  4.0,
+        "MinZPos" :  1.0,
+        "MaxXPos" :-11.0,
+        "MaxYPos" :  6.0,
+        "MaxZPos" :  3.0
+      },
+      {
+        "MinXPos" : -9.0,
+        "MinYPos" :  6.0,
+        "MinZPos" : -1.0,
+        "MaxXPos" :-11.0,
+        "MaxYPos" :  8.0,
+        "MaxZPos" :  1.0
+      }
+    ],
+    "spheres" :
+    [
+      {
+        "CenterXPos" : -10.0,
+        "CenterYPos" : 5.0,
+        "CenterZPos" : 0.0,
+        "radius" : 2.0,
+        "material" : "glass"
+      }
+    ]
+  }
+}
