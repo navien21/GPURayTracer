@@ -186,6 +186,8 @@ namespace grt {
 					_out << "Box: " << (i+1) << " - " << model.boxes[i] << std::endl;
 				for (int i=0; i<(int)model.spheres.size(); ++i)
 					_out << "Sphere:" << (i+1) << " - " << model.spheres[i] << std::endl;
+				for (int i=0; i<(int)model.chulls.size(); ++i)
+					_out << "Chull:" << (i+1) << " - " << model.chulls[i] << std::endl;
 				return _out;
 			}
 	};
