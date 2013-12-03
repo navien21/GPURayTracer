@@ -315,7 +315,7 @@ if(WIN32)
     set(bit_dest "")
   endif()
   foreach(config ${CMAKE_CONFIGURATION_TYPES})
-    get_target_property(loc gpuRayTracer ${config}_LOCATION)
+    get_target_property(loc gpuRayTracer_main ${config}_LOCATION)
     if(loc)
       # A little helper function
       function(copy_dll lib)
@@ -345,7 +345,6 @@ set(PASSED_FIRST_CONFIGURE ON CACHE INTERNAL "Already Configured once?")
 
 
 
-#if(buildTest)
 
 # will add gtest project and gtest_SOURCE_DIR
 add_subdirectory(lib/gtest-1.7.0)
@@ -370,5 +369,5 @@ add_test(NAME runUnitTests
          COMMAND runUnitTests)
 
 
-#endif()
+
 
