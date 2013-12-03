@@ -3,7 +3,8 @@
   {
     "useDefaultLighting" : true,
     "useDefaultBox" : true,
-    "useDefaultSphere" : true
+    "useDefaultSphere" : true,
+    "useDefaultChull" : true
   }
 }
 
