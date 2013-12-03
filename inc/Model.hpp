@@ -18,6 +18,7 @@
 #include <set>
 #include <vector>
 #include <ostream>
+#include <string>
 
 namespace grt {
 
