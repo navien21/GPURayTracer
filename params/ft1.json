@@ -11,7 +11,8 @@
 
        { "xPos":-40.0, "yPos": 70.0, "zPos": -30.0,
          "r": 0.7, "g": 0.4, "b": 1.0}
-     ]
+     ],
+     "useDefaultBox": true
   }
 }
 
