@@ -1,0 +1,26 @@
+{
+  "image":
+  {
+     "title": "3 Glass Spheres with 3 Lights",
+     "useDefaultLights": false,
+     "totalBrightness": 1.0,
+     "lights":
+     [
+       { "xPos": -2.0, "yPos": 8.0, "zPos": 2.0, 
+         "r": 0.0, "g": 0.0, "b": 1.0},
+       {   "xPos": 2.0, "yPos": 8.0, "zPos": 2.0, 
+         "r": 1.0, "g": 0.0, "b": 0.0},
+      {   "xPos": -2.0, "yPos": 8.0, "zPos": -2.0, 
+         "r": 0.0, "g": 1.0, "b": 0.0}
+     ],
+ 
+     "spheres":
+     [
+        { "CenterXPos": -4.0, "CenterYPos": 5.0, "CenterZPos": 4.0, "radius": 2.0, "material": "glass" },
+        { "CenterXPos": 2.0, "CenterYPos": 5.0, "CenterZPos": 2.0, "radius": 2.0, "material": "glass" },
+        { "CenterXPos": -2.0, "CenterYPos": 5.0, "CenterZPos": -2.0, "radius": 2.0, "material": "glass" }
+     ]
+  
+  }
+}
+
