@@ -2,6 +2,7 @@
   "image":
   {
      "useDefaultLights": false,
+     "useDefaultBox": true,
      "totalBrightness": 1.0,
      "lights":
      [
