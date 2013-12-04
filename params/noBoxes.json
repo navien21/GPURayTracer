@@ -3,12 +3,8 @@
   {
 
      "title": "No Boxes",
-     "useDefaultLights": true,
+     "useDefaultLights": true
  
-     "useDefaultBox": false,
-     "boxes":
-    [
-    ]
   }
 }
 
