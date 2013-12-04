@@ -1,7 +1,7 @@
 {
   "image":
   {
-     "title": "fr2: Default Box 2 Lights, Same as All Defaults",
+     "title": "fr2: Default Box and 2 Lights",
      "useDefaultLights": false,
      "totalBrightness": 1.0,
      "lights":
