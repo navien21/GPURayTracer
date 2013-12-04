@@ -1,0 +1,32 @@
+{
+  "image":
+  {
+     "title": "GPURayTracer",
+     "useDefaultLights": false,
+     "totalBrightness": 1.0,
+     "lights":
+     [
+
+       { "xPos": -25.0, "yPos": 60.0, "zPos": -16.0, 
+         "r": 1.0, "g": 1.0, "b": 1.0},
+
+       { "xPos":-20.0, "yPos": 60.0, "zPos": 16.0,
+         "r": 1.0, "g": 1.0, "b": 1.0}
+     ],
+     "boxes":
+     [ 
+       { "MinXPos": -2.0, "MinYPos": 0.0, "MinZPos": -2.0,
+         "MaxXPos": 2.0, "MaxYPos": 7.0, "MaxZPos": 2.0 }
+     ],
+     "spheres":
+     [
+        { "CenterXPos": 2.0, "CenterYPos": 1.5, "CenterZPos": -2.5, "radius": 1.0 }
+     ],
+     "chulls":
+     [
+        { "CenterXPos": -1.4, "CenterYPos": 0.0, "CenterZPos": -3.7,
+          "radius": 1.0, "min": 0.02, "max": 3.5, "nsides": 6 }
+     ]
+  }
+}
+
